@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      lang="en">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title><ui:insert name="title">Template Web Manhattan</ui:insert></title>
+        <h:outputScript name="js/nanoscroller.js" library="manhattan-layout" />
+        <h:outputScript name="js/layout.js" library="manhattan-layout" />
+        <script type="text/javascript">
+            function validateSession(){
+                if(!'#{UserSessionBean.validHttpSession}'){
+                    window.alert('Sesion invalida.');
+                }
+            }
+        </script>
+        <ui:insert name="head"/>
+    </h:head>
+
+    <h:body onload="validateSession()">
+        <p:growl id="PrincipalGrowlApp" showDetail="true">
+            <p:autoUpdate/>
+        </p:growl>
+        <div class="layout-wrapper #{guestPreferences.layoutStyleClass}">
+            <div class="layout-main">
+                <ui:include src="./dialogs.xhtml" />
+                <ui:include src="./topbar.xhtml" />
+                <div class="layout-content">
+                    <ui:insert name="content"/>
+                </div>
+                
+                <ui:include src="./footer.xhtml" />
+                
+                <div class="layout-main-mask"></div>
+            </div>
+
+            <ui:include src="./rightpanel.xhtml" />      
+            <ui:include src="./sidebar.xhtml" />
+        </div>
+        
+        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+           <f:facet name="start">
+               <i class="fa fa-circle-o-notch fa-spin ajax-loader" aria-hidden="true"></i>
+           </f:facet>
+
+           <f:facet name="complete">
+               <h:outputText value="" />
+           </f:facet>
+       </p:ajaxStatus>
+        
+        <h:outputStylesheet name="css/nanoscroller.css" library="manhattan-layout" />
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="manhattan-layout" />
+    </h:body>
+
+</html>

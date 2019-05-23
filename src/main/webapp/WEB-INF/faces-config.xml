@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<faces-config version="2.0" xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+    
+    <name>primefaces_manhattan</name>
+    
+    <component>
+        <component-type>org.primefaces.component.ManhattanMenu</component-type>
+        <component-class>org.primefaces.manhattan.component.ManhattanMenu</component-class>
+    </component>
+    
+    <render-kit>
+        <renderer>
+            <component-family>org.primefaces.component</component-family>
+            <renderer-type>org.primefaces.component.ManhattanMenuRenderer</renderer-type>
+            <renderer-class>org.primefaces.manhattan.component.ManhattanMenuRenderer</renderer-class>
+        </renderer>
+    </render-kit>
+    <navigation-rule>
+        <display-name>Login rules</display-name>
+        <description>Describe todas las rutas que se pueden tomar desde el login</description>
+        <from-view-id>/login.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>denied</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>autowired</from-outcome>
+            <to-view-id>/dashboard.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <display-name>404 Rules</display-name>
+        <description>Describe todas las rutas que se pueden tomar desde la pagina de error 404</description>
+        <from-view-id>/system/core/error_pages/404.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>dashboard</from-outcome>
+            <to-view-id>/dashboard.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <display-name>Dashboard rules</display-name>
+        <description>Describe todas las rutas que se pueden tomar desde la pagina dashboard</description>
+        <from-view-id>/dashboard.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>logout</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failed</from-outcome>
+            <to-view-id>/dashboard.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>
