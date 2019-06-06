@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.primefaces.customize.UI.security.menu;
+package com.gabyval.UI.security.menu;
 
 import java.util.ArrayList;
 

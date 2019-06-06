@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.primefaces.customize.UI.beans;
+package com.gabyval.UI.beans;
 
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;

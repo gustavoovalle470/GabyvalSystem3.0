@@ -3,20 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.primefaces.customize.controllers.security;
+package com.gabyval.controllers.security;
 
+import com.gabyval.referencesbo.security.users.GbUsers;
+import com.gabyval.services.security.users.GBUserService;
+import java.io.Serializable;
 import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 /**
  *
  * @author OvalleGA
  */
-public class LoginUsers {
-    private static LoginUsers instance;
+@Controller
+public class LoginUsersController {
+    private static LoginUsersController instance;
     
-    public static LoginUsers getInstance(){
+    @Autowired
+    private GBUserService user_service;
+    
+    public LoginUsersController(){
+        instance=this;
+        System.out.println("LoginController");
+    }
+    
+    public static LoginUsersController getInstance(){
         if(instance == null){
-            instance = new LoginUsers();
+            instance = new LoginUsersController();
         }
         return instance;
     }
@@ -35,8 +49,11 @@ public class LoginUsers {
         return true;
     }
 
-    private static boolean isInvalidCrendetial(String user, String password) throws Exception{
-        if(!user.equals("govalle") && !password.equals("ovalle")){
+    private boolean isInvalidCrendetial(String user, String password) throws Exception{
+        GbUsers gbuser=user_service.load(user);
+        System.out.println("Usuario recuperado: "+gbuser.getGbUsername());
+        System.out.println("Contraseña recuperado: "+gbuser.getGbPassword());
+        if(gbuser == null || !password.equals(gbuser.getGbPassword())){
             return false;
         }
         return true;

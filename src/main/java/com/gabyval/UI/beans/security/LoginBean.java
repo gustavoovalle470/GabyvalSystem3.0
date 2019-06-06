@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.primefaces.customize.UI.beans.security;
+package com.gabyval.UI.beans.security;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import org.primefaces.customize.UI.utils.UIMessageManagement;
-import org.primefaces.customize.controllers.security.LoginUsers;
+import com.gabyval.UI.utils.UIMessageManagement;
+import com.gabyval.controllers.security.LoginUsersController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 
 /**
@@ -22,7 +24,7 @@ import org.primefaces.customize.controllers.security.LoginUsers;
 public class LoginBean {
     private String username;
     private String password;
-
+    
     public String getUsername() {
         return username;
     }
@@ -42,13 +44,14 @@ public class LoginBean {
     public String login(){
         username = username.toUpperCase();
         try {
-            if(LoginUsers.getInstance().ValidateCredentials(username, password, (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true))){
+            if(LoginUsersController.getInstance().ValidateCredentials(username, password, (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true))){
                 UIMessageManagement.putInfoMessage("Bienvenido "+username);
                 return "autowired";
             }else{
                 return "denied";
             }
         } catch (Exception ex) {
+            System.err.println(ex.getMessage());
             UIMessageManagement.putErrorMessage(ex.getMessage());
             return "denied";
         }

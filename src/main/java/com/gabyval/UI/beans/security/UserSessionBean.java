@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.primefaces.customize.UI.beans.security;
+package com.gabyval.UI.beans.security;
 
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import org.primefaces.customize.UI.security.menu.MenuFactory;
-import org.primefaces.customize.UI.utils.UIMessageManagement;
-import org.primefaces.customize.controllers.security.UserSessionManager;
+import com.gabyval.UI.security.menu.MenuFactory;
+import com.gabyval.UI.utils.UIMessageManagement;
+import com.gabyval.controllers.security.UserSessionManager;
 import org.primefaces.model.menu.DefaultMenuModel;
 
 /**

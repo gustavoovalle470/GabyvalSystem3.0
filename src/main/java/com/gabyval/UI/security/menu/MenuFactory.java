@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.primefaces.customize.UI.security.menu;
+package com.gabyval.UI.security.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.primefaces.customize.controllers.security.SecurityMenuManager;
+import com.gabyval.controllers.security.SecurityMenuManager;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
