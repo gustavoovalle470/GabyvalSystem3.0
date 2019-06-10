@@ -5,10 +5,14 @@
  */
 package com.gabyval.controllers.security;
 
+import com.gabyval.Exceptions.GBException;
+import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.security.users.GbUsers;
 import com.gabyval.services.security.users.GBUserService;
-import java.io.Serializable;
+import com.gabyval.services.security.utils.SecurityUtils;
+import java.security.NoSuchAlgorithmException;
 import javax.servlet.http.HttpSession;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -18,14 +22,15 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class LoginUsersController {
+    private final Logger log = Logger.getLogger(LoginUsersController.class);
     private static LoginUsersController instance;
     
     @Autowired
     private GBUserService user_service;
     
     public LoginUsersController(){
+        log.debug("Creando instancia del controlador LoginUsersController");
         instance=this;
-        System.out.println("LoginController");
     }
     
     public static LoginUsersController getInstance(){
@@ -35,27 +40,37 @@ public class LoginUsersController {
         return instance;
     }
     
-    public boolean ValidateCredentials(String user, String password, HttpSession session) throws Exception{
-        String msg ="No se pudo iniciar sesión porque: ";
-        msg = msg+(user == null?"\n - El usuario no puede ser nulo":"")
-                 +(password == null?"\n - La contraseña no puede ser nula":"")
-                 +(UserSessionManager.getInstance().isUserConnected(session)?"\n - El usuario "+user+" ya tiene una sesión abierta.":"")
-                 +(!isInvalidCrendetial(user, password)?"\n - El usuario y/o contraseña no son validos.":"");
-        System.out.println("El mensaje es: "+msg);
-        if(!msg.equals("No se pudo iniciar sesión porque: ")){
-            throw new Exception(msg);
-        }
+    public boolean ValidateCredentials(String user, String password, HttpSession session) throws GBException, GBPersistenceException, NoSuchAlgorithmException {
+        log.debug("Validando credenciales de usuario. Aplicando seguridad.");
+        String pwd_enc = SecurityUtils.encryptPwd(password);
+        log.debug("Iniciando validaciones:");
+        isInvalidCrendetial(user, pwd_enc);
+        log.debug("Registrando sesion de usuario:");
         UserSessionManager.getInstance().connectUser(user, session);
+        log.debug("Redireccionando a la pagina principal.");
         return true;
     }
 
-    private boolean isInvalidCrendetial(String user, String password) throws Exception{
+    private boolean isInvalidCrendetial(String user, String password) throws GBException, GBPersistenceException{
+        log.debug("Obteniendo usuario de la base de datos: "+user);
         GbUsers gbuser=user_service.load(user);
-        System.out.println("Usuario recuperado: "+gbuser.getGbUsername());
-        System.out.println("Contraseña recuperado: "+gbuser.getGbPassword());
-        if(gbuser == null || !password.equals(gbuser.getGbPassword())){
-            return false;
+        if(gbuser == null){
+            log.error("El usuario "+user+" no pudo ser encontrado en la base de datos.");
+            throw new GBException(10, user);
         }
+        if(!password.equals(gbuser.getGbPassword())){
+            log.error("Las credenciales proporcionadas no son validas.");
+            throw new GBException(13, null);
+        }
+        if(gbuser.getGbLoginStatus() == 1){
+            log.error("El usuario "+user+" se encuentra conectado.");
+            throw new GBException(11, user);
+        }
+        if(gbuser.getGbOprativeStatus() != 1){
+            log.error("El usuario "+user+" no tiene un estado operativo valido.");
+            throw new GBException(12, user);
+        }
+        log.debug("Las credenciales proporcionadas fueron validadas con exito.");
         return true;
     }
 }

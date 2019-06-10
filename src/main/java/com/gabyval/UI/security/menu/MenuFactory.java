@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import com.gabyval.controllers.security.SecurityMenuManager;
+import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -19,11 +20,14 @@ import org.primefaces.model.menu.MenuElement;
  * @author OvalleGA
  */
 public class MenuFactory {
+    private final Logger log = Logger.getLogger(MenuFactory.class);
     private static MenuFactory instance;
     private final HashMap<String, MenuDescriptor> allMenuSystem;
     
     public MenuFactory(){
+        log.debug("Obteniendo todos los menus del sistema.");
         allMenuSystem = SecurityMenuManager.getInstance().getAllMenuSystem();
+        log.debug("Menus de sistema cargados en memoria.");
     }
     
     public static MenuFactory getInstance(){
@@ -61,10 +65,7 @@ public class MenuFactory {
     private HashMap<String, MenuDescriptor> getSecMenusByUser(String usernamne){
         HashMap<String, MenuDescriptor> user_menus = new HashMap<>();
         List<String> user_menu_allow = SecurityMenuManager.getInstance().getMenuSec(usernamne);
-        System.out.println("Cantidad de menus de usuario: "+user_menu_allow.size());
         for(String id : user_menu_allow){
-            System.out.println("Menu: "+allMenuSystem.get(id));
-            System.out.println("Obteniendo menu: "+id);
             user_menus.put(id, allMenuSystem.get(id));
             String parentId = allMenuSystem.get(id).getParentId();
             while(parentId != null){
@@ -76,7 +77,7 @@ public class MenuFactory {
     }
     
     public DefaultMenuModel getSecMenuUser(String username){
-        System.out.println("Cargando menu");
+        log.debug("Obteniendo el arbol de seguridad para el usuario "+username);
         DefaultMenuModel user_menu = new DefaultMenuModel();
         HashMap<String, MenuDescriptor> user_desc = getSecMenusByUser(username);
         for(String id: user_desc.keySet()){
