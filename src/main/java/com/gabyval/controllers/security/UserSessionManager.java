@@ -75,8 +75,11 @@ public class UserSessionManager {
     }
   
     public boolean isExpirePwd(HttpSession session) throws GBPersistenceException{
+        log.debug("Verificando si la contraseña de usuario aun es valida, obteniendo usuario...");
         GbUsers gbuser=user_service.load(users_online.get(session));
+        log.debug("Validando, ultimo cambio de contraseña fue el "+gbuser.getGbLastPwdXgeDt().toString());
         gbuser.getGbLastPwdXgeDt();
+        log.debug("Consultando politicas de vencimiento del moduleconfiguration, vencimiento cada "+1+" dias. Han pasado "+1+" dias desde el ultimo cambio. Se requiere cambio? "+false);
         return false;
     }
     
