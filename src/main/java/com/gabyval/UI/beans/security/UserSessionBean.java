@@ -13,10 +13,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import com.gabyval.UI.security.menu.MenuFactory;
 import com.gabyval.UI.utils.UIMessageManagement;
-import com.gabyval.controllers.security.GBMessageContoller;
+import com.gabyval.controllers.security.SecurityManagerController;
 import com.gabyval.controllers.security.UserSessionManager;
 import com.gabyval.persistence.exception.GBPersistenceException;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuModel;
 
@@ -31,6 +30,8 @@ public class UserSessionBean implements Serializable{
     private String username;
     private final HttpSession session;
     private DefaultMenuModel user_sec_menu;
+    private String pwd;
+    private String repwd;
 
     public UserSessionBean(){
         log.debug("Obteniendo datos de sesion.");
@@ -70,6 +71,22 @@ public class UserSessionBean implements Serializable{
     public void setUser_sec_menu(DefaultMenuModel user_sec_menu) {
         this.user_sec_menu = user_sec_menu;
     }
+
+    public String getPwd() {
+        return pwd;
+    }
+
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getRepwd() {
+        return repwd;
+    }
+
+    public void setRepwd(String repwd) {
+        this.repwd = repwd;
+    }
     
     public String logout(){
         try {
@@ -86,6 +103,34 @@ public class UserSessionBean implements Serializable{
             UIMessageManagement.putException(ex);
             log.error("El cierre de sesion fallo por que: "+ex.getMessage());
             return "failed";
+        }
+    }
+    
+    public String changePassword(){
+        try {
+            log.debug("Cambiando la contraseña para el usuario "+username);
+            log.debug("Pasword ingresada: "+pwd+" confirmacion: "+repwd);
+            if(pwd != null && repwd != null && pwd.equals(repwd) && isValidPwd(repwd)){
+                System.out.println("Paso la validacion...");
+                UserSessionManager.getInstance().changePwd(session, repwd);
+                log.debug("Cerrando sesion de usuario para confirmar los cambios...");
+                return logout();
+            }
+            //UIMessageManagement.putGbMessage(1, null);
+        } catch (GBPersistenceException ex) {
+            log.fatal(ex);
+        }
+        return "failed";
+    }
+
+    private boolean isValidPwd(String repwd) throws GBPersistenceException {
+        try {
+            return !SecurityManagerController.getInstacnce().isPwdUsed(username, repwd) &&
+                    SecurityManagerController.getInstacnce().isAccomplishSecPol(repwd);
+        } catch (GBException ex) {
+            UIMessageManagement.putException(ex);
+            log.fatal(ex);
+            return false;
         }
     }
 }

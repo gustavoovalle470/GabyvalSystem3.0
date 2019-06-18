@@ -1,0 +1,31 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <p:dialog header="Su contraseaña ha vencido" 
+                  widgetVar="exppwd" 
+                  resizable="false" 
+                  visible="#{UserSessionBean.pwdExpire}"
+                  modal="true" 
+                  style="size: 300px;"
+                  closable="false">
+            <h:panelGrid columns="2" cellpadding="5">
+                <p:panelGrid columns="1" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p>Su contraseña ha caducado y deberá modificarla para continuar,</p>
+                    <p>por favor ingrese una nueva:</p>
+                    <p:password id="expwd" placeholder="Ingrese contraseña" value="#{UserSessionBean.pwd}"/>
+                    <p:password id="reexpwd" placeholder="Repita contraseña" value="#{UserSessionBean.repwd}"/>
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <div align="right">
+                        <p:commandButton value="Cerrar sesión" action="#{UserSessionBean.changePassword()}" oncomplete="PF('exppwd').hide()"/>
+                    </div>
+                </f:facet>  
+            </h:panelGrid>
+        </p:dialog>    
+    </h:form>
+
+</ui:composition>

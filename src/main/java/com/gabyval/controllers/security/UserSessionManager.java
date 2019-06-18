@@ -5,11 +5,22 @@
  */
 package com.gabyval.controllers.security;
 
+import com.gabyval.Exceptions.GBException;
+import com.gabyval.UI.utils.ADModuleConfigurationCons;
+import com.gabyval.UI.utils.UIMessageManagement;
+import com.gabyval.controllers.system.ADModuleConfigurationContoller;
 import com.gabyval.persistence.exception.GBPersistenceException;
+import com.gabyval.referencesbo.security.users.GbPwdHistory;
+import com.gabyval.referencesbo.security.users.GbPwdHistoryPK;
 import com.gabyval.referencesbo.security.users.GbUsers;
+import com.gabyval.services.security.users.GBPwdHistoryService;
 import com.gabyval.services.security.users.GBUserService;
+import com.gabyval.services.security.utils.SecurityUtils;
+import com.gabyval.services.system.ADModuleConfigurationService;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.logging.Level;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,15 +86,41 @@ public class UserSessionManager {
     }
   
     public boolean isExpirePwd(HttpSession session) throws GBPersistenceException{
-        log.debug("Verificando si la contraseña de usuario aun es valida, obteniendo usuario...");
-        GbUsers gbuser=user_service.load(users_online.get(session));
-        log.debug("Validando, ultimo cambio de contraseña fue el "+gbuser.getGbLastPwdXgeDt().toString());
-        gbuser.getGbLastPwdXgeDt();
-        log.debug("Consultando politicas de vencimiento del moduleconfiguration, vencimiento cada "+1+" dias. Han pasado "+1+" dias desde el ultimo cambio. Se requiere cambio? "+false);
-        return false;
+        try {
+            log.debug("Verificando si la contraseña de usuario aun es valida, obteniendo usuario...");
+            GbUsers gbuser=user_service.load(users_online.get(session));
+            log.debug("Validando, ultimo cambio de contraseña fue el "+gbuser.getGbLastPwdXgeDt().toString());
+            int days_last_change=(int) ((Calendar.getInstance().getTime().getTime()-gbuser.getGbLastPwdXgeDt().getTime())/86400000);
+            log.debug("Consultando politicas de vencimiento del moduleconfiguration, vencimiento "
+                    + "cada "+1+" dias. Han pasado "+days_last_change+" dias desde el ultimo cambio. "
+                    + "Se requiere cambio? "+(days_last_change>=
+                      ADModuleConfigurationContoller.getInstance().getIntegerConfValue(ADModuleConfigurationCons.PWD_EXPIRE_TIME)));
+            return (days_last_change>=ADModuleConfigurationContoller.getInstance().getIntegerConfValue(ADModuleConfigurationCons.PWD_EXPIRE_TIME));
+        } catch (GBException ex) {
+            UIMessageManagement.putException(ex);
+            log.error(ex.getMessage());
+            return false;
+        }
+    }
+    
+    public void changePwd(HttpSession session, String newPwd){
+        try {
+            log.debug("Cambiando credenciales de ingreso. Obteniendo usuario...");
+            GbUsers gbuser=user_service.load(users_online.get(session));
+            String old_pwd = gbuser.getGbPassword();
+            gbuser.setGbPassword(SecurityUtils.encryptPwd(newPwd));
+            log.debug("Guardando contraseña ...");
+            user_service.save(gbuser);
+            log.debug("Credenciales actualizadas con exito. Guardando la contraseña anterior, para efectuar politicas de seguridad.");
+            SecurityManagerController.getInstacnce().saveOldPwd(old_pwd, gbuser);
+            log.debug("Contraseña anterior salvada. Finalizado el proceso.");
+        } catch (GBPersistenceException | NoSuchAlgorithmException ex) {
+            UIMessageManagement.putException(ex);
+            log.error(ex.getMessage());
+        }
     }
     
     public String getUser(HttpSession session){
         return users_online.get(session);
-    }
+    }   
 }
