@@ -103,21 +103,19 @@ public class UserSessionManager {
         }
     }
     
-    public void changePwd(HttpSession session, String newPwd){
-        try {
-            log.debug("Cambiando credenciales de ingreso. Obteniendo usuario...");
-            GbUsers gbuser=user_service.load(users_online.get(session));
-            String old_pwd = gbuser.getGbPassword();
-            gbuser.setGbPassword(SecurityUtils.encryptPwd(newPwd));
-            log.debug("Guardando contraseña ...");
-            user_service.save(gbuser);
-            log.debug("Credenciales actualizadas con exito. Guardando la contraseña anterior, para efectuar politicas de seguridad.");
-            SecurityManagerController.getInstacnce().saveOldPwd(old_pwd, gbuser);
-            log.debug("Contraseña anterior salvada. Finalizado el proceso.");
-        } catch (GBPersistenceException | NoSuchAlgorithmException ex) {
-            UIMessageManagement.putException(ex);
-            log.error(ex.getMessage());
+    public void changePwd(HttpSession session, String newPwd) throws GBPersistenceException, NoSuchAlgorithmException, GBException{
+        if(SecurityManagerController.getInstance().isAccomplishSecPol(newPwd)){
+            
         }
+        log.debug("Cambiando credenciales de ingreso. Obteniendo usuario...");
+        GbUsers gbuser=user_service.load(users_online.get(session));
+        String old_pwd = gbuser.getGbPassword();
+        gbuser.setGbPassword(SecurityUtils.encryptPwd(newPwd));
+        log.debug("Guardando contraseña ...");
+        user_service.save(gbuser);
+        log.debug("Credenciales actualizadas con exito. Guardando la contraseña anterior, para efectuar politicas de seguridad.");
+        SecurityManagerController.getInstance().saveOldPwd(old_pwd, gbuser);
+        log.debug("Contraseña anterior salvada. Finalizado el proceso.");
     }
     
     public String getUser(HttpSession session){

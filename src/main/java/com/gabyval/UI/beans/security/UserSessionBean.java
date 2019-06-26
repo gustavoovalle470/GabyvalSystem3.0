@@ -5,7 +5,6 @@
  */
 package com.gabyval.UI.beans.security;
 
-import com.gabyval.Exceptions.GBException;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -13,9 +12,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import com.gabyval.UI.security.menu.MenuFactory;
 import com.gabyval.UI.utils.UIMessageManagement;
-import com.gabyval.controllers.security.SecurityManagerController;
 import com.gabyval.controllers.security.UserSessionManager;
 import com.gabyval.persistence.exception.GBPersistenceException;
+import java.security.NoSuchAlgorithmException;
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuModel;
 
@@ -110,27 +109,15 @@ public class UserSessionBean implements Serializable{
         try {
             log.debug("Cambiando la contraseña para el usuario "+username);
             log.debug("Pasword ingresada: "+pwd+" confirmacion: "+repwd);
-            if(pwd != null && repwd != null && pwd.equals(repwd) && isValidPwd(repwd)){
-                System.out.println("Paso la validacion...");
+            if(pwd != null && repwd != null && pwd.equals(repwd)){
                 UserSessionManager.getInstance().changePwd(session, repwd);
-                log.debug("Cerrando sesion de usuario para confirmar los cambios...");
-                return logout();
             }
-            //UIMessageManagement.putGbMessage(1, null);
-        } catch (GBPersistenceException ex) {
-            log.fatal(ex);
-        }
-        return "failed";
-    }
-
-    private boolean isValidPwd(String repwd) throws GBPersistenceException {
-        try {
-            return !SecurityManagerController.getInstacnce().isPwdUsed(username, repwd) &&
-                    SecurityManagerController.getInstacnce().isAccomplishSecPol(repwd);
-        } catch (GBException ex) {
+            log.debug("Cerrando sesion de usuario para confirmar los cambios...");
+            return logout();
+        } catch (GBPersistenceException | NoSuchAlgorithmException ex) {
             UIMessageManagement.putException(ex);
-            log.fatal(ex);
-            return false;
+            log.error(ex.getMessage());
+            return "failed";
         }
     }
 }

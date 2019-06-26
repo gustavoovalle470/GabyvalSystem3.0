@@ -47,7 +47,7 @@ public class ADModuleConfigurationContoller {
         if(!getConfiguration(name).getModuleConfigType().equals("BOOLEAN")){
             throw new GBException("No se puede obtener el valor booleano de la configuracion con nombre "+name);
         }
-        return Boolean.getBoolean(getConfiguration(name).getModuleConfigValue());
+        return Boolean.valueOf(getConfiguration(name).getModuleConfigValue());
     }
     
     public int getIntegerConfValue(String name) throws GBException{

@@ -18,5 +18,5 @@ public class ADModuleConfigurationCons {
     public final static String PWD_ONE_MAY = "PWD_ONE_MAY";
     public final static String PWD_ONE_MIN = "PWD_ONE_MIN";
     public final static String PWD_ONE_NUM = "PWD_ONE_NUM";
-    public final static String PWD_ONE_ESP = "PWD_ONE_ESP";
+    public final static String PWD_CANT_SAVE="PWD_CANT_SAVE";
 }
