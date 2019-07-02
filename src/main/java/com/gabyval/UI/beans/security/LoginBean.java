@@ -6,6 +6,7 @@
 package com.gabyval.UI.beans.security;
 
 import com.gabyval.Exceptions.GBException;
+import com.gabyval.UI.utils.ADNavigationActions;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -47,27 +48,27 @@ public class LoginBean {
     public String login(){
         username = username.toUpperCase();
         try {
-            log.debug("Inica el proceso de inicio de sesion para el usuario "+username);
+            log.info("Inica el proceso de inicio de sesion para el usuario "+username);
             if(LoginUsersController.getInstance().ValidateCredentials(username, password, (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true))){
                 UIMessageManagement.putGbMessage(18, username);
-                log.debug("El inicio de sesion para el usuario"+username+" fue exitoso enviando a pagina de inicio.");
-                return "autowired";
+                log.info("El inicio de sesion para el usuario "+username+" fue exitoso enviando a pagina de inicio.");
+                return ADNavigationActions.LOGIN;
             }else{
-                log.debug("El inicio de sesion para el usuario"+username+" fallo.");
-                return "denied";
+                log.info("El inicio de sesion para el usuario"+username+" fallo.");
+                return ADNavigationActions.FAILED_LOGIN;
             }
         } catch (GBException ex) {
             log.error("Error al intentar iniciar la sesion de usuario: "+ex.getMessage());
             UIMessageManagement.putGbMessage(ex);
-            return "denied";
+            return ADNavigationActions.FAILED_LOGIN;
         }catch(GBPersistenceException ex){
             log.error("Error al intentar iniciar la sesion de usuario: "+ex.getMessage());
             UIMessageManagement.putErrorMessage("Ha ocurrido un problema de comunicaciones, contacte con su administrador.");
-            return "denied";
+            return ADNavigationActions.FAILED_LOGIN;
         }catch(NoSuchAlgorithmException ex){
             log.error("Error al intentar iniciar la sesion de usuario: "+ex.getMessage());
             UIMessageManagement.putErrorMessage("Ha ocurrido un error al tratar de descifrar su cuenta, contacte con su administrador.");
-            return "denied";
+            return ADNavigationActions.FAILED_LOGIN;
         }
     }
 }

@@ -25,9 +25,9 @@ public class MenuFactory {
     private final HashMap<String, MenuDescriptor> allMenuSystem;
     
     public MenuFactory(){
-        log.debug("Obteniendo todos los menus del sistema.");
+        log.info("Obteniendo todos los menus del sistema.");
         allMenuSystem = SecurityMenuManager.getInstance().getAllMenuSystem();
-        log.debug("Menus de sistema cargados en memoria.");
+        log.info("Menus de sistema cargados en memoria.");
     }
     
     public static MenuFactory getInstance(){
@@ -77,7 +77,7 @@ public class MenuFactory {
     }
     
     public DefaultMenuModel getSecMenuUser(String username){
-        log.debug("Obteniendo el arbol de seguridad para el usuario "+username);
+        log.info("Obteniendo el arbol de seguridad para el usuario "+username);
         DefaultMenuModel user_menu = new DefaultMenuModel();
         HashMap<String, MenuDescriptor> user_desc = getSecMenusByUser(username);
         for(String id: user_desc.keySet()){

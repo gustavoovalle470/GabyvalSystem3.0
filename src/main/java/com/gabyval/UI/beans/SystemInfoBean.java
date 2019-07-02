@@ -6,8 +6,10 @@
 package com.gabyval.UI.beans;
 
 import com.gabyval.Exceptions.GBException;
+import com.gabyval.UI.utils.ADModuleConfigurationCons;
 import com.gabyval.UI.utils.UIMessageManagement;
 import com.gabyval.controllers.system.ADModuleConfigurationContoller;
+import com.gabyval.persistence.exception.GBPersistenceException;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -24,9 +26,9 @@ public class SystemInfoBean implements Serializable{
 
     public SystemInfoBean(){
         try {
-            header_view = ADModuleConfigurationContoller.getInstance().getStrConfValue("APP_NAME")+" "+ADModuleConfigurationContoller.getInstance().getStrConfValue("APP_VERSION");
-            app_name = ADModuleConfigurationContoller.getInstance().getStrConfValue("APP_NAME");
-        } catch (GBException ex) {
+            header_view = ADModuleConfigurationContoller.getInstance().getStrConfValue(ADModuleConfigurationCons.APP_NAME)+" "+ADModuleConfigurationContoller.getInstance().getStrConfValue(ADModuleConfigurationCons.APP_VERSION);
+            app_name = ADModuleConfigurationContoller.getInstance().getStrConfValue(ADModuleConfigurationCons.APP_NAME);
+        } catch (GBException | GBPersistenceException ex) {
             UIMessageManagement.putException(ex);
         }
     }

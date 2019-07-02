@@ -5,6 +5,9 @@
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
     <h:form>
+        <p:growl id="GrowlChangePwd" showDetail="true">
+            <p:autoUpdate/>
+        </p:growl>
         <p:dialog header="Su contraseaña ha vencido" 
                   widgetVar="exppwd" 
                   resizable="false" 
@@ -21,7 +24,7 @@
                 </p:panelGrid>
                 <f:facet name="footer">
                     <div align="right">
-                        <p:commandButton value="Cerrar sesión" action="#{UserSessionBean.changePassword()}" oncomplete="PF('exppwd').hide()"/>
+                        <p:commandButton value="Cambiar contraseña" action="#{UserSessionBean.changePassword()}" update="GrowlChangePwd"/>
                     </div>
                 </f:facet>  
             </h:panelGrid>

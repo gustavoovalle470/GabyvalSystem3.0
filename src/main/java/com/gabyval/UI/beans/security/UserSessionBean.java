@@ -5,16 +5,19 @@
  */
 package com.gabyval.UI.beans.security;
 
+import com.gabyval.Exceptions.GBException;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import com.gabyval.UI.security.menu.MenuFactory;
+import com.gabyval.UI.utils.ADNavigationActions;
 import com.gabyval.UI.utils.UIMessageManagement;
 import com.gabyval.controllers.security.UserSessionManager;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import java.security.NoSuchAlgorithmException;
+import javax.faces.application.FacesMessage;
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuModel;
 
@@ -33,11 +36,11 @@ public class UserSessionBean implements Serializable{
     private String repwd;
 
     public UserSessionBean(){
-        log.debug("Obteniendo datos de sesion.");
+        log.info("Obteniendo datos de sesion.");
         session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        log.debug("Obteniendo usuario conectado.");
+        log.info("Obteniendo usuario conectado.");
         username = UserSessionManager.getInstance().getUser(session);
-        log.debug("Recuperando esquema de seguridad.");
+        log.info("Recuperando esquema de seguridad.");
         user_sec_menu = MenuFactory.getInstance().getSecMenuUser(username);
     }
     
@@ -89,35 +92,40 @@ public class UserSessionBean implements Serializable{
     
     public String logout(){
         try {
-            log.debug("Cerrando sesion del usuario: "+username);
+            log.info("Cerrando sesion del usuario: "+username);
             if (UserSessionManager.getInstance().disconectUser(session)) {
                 UIMessageManagement.putInfoMessage("La sesion del usuario "+username+" finalizó correctamente.");
-                log.debug("Cierre de sesion finalizado rediriguiendo a paginal principal.");
-                return "logout";
+                log.info("Cierre de sesion finalizado rediriguiendo a paginal principal.");
+                return ADNavigationActions.LOGOUT;
             } else {
-                log.debug("El cierre de sesion no se pudo lograr.");
-                return "failed";
+                log.info("El cierre de sesion no se pudo lograr.");
+                return ADNavigationActions.FAILED_LOGOUT;
             }
         } catch (GBPersistenceException ex) {
             UIMessageManagement.putException(ex);
             log.error("El cierre de sesion fallo por que: "+ex.getMessage());
-            return "failed";
+            return ADNavigationActions.FAILED_LOGOUT;
         }
     }
     
     public String changePassword(){
         try {
-            log.debug("Cambiando la contraseña para el usuario "+username);
-            log.debug("Pasword ingresada: "+pwd+" confirmacion: "+repwd);
+            log.info("Cambiando la contraseña para el usuario "+username);
+            log.info("Pasword ingresada: "+pwd+" confirmacion: "+repwd);
             if(pwd != null && repwd != null && pwd.equals(repwd)){
                 UserSessionManager.getInstance().changePwd(session, repwd);
+                log.info("Cerrando sesion de usuario para confirmar los cambios...");
+                return logout();
+            }else{
+                log.info("Las contraseñas ingresadas no coinciden.");
+                UIMessageManagement.putCustomMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Las contraseñas ingresadas no coinciden.");                
+                return ADNavigationActions.FAILED_LOGOUT;
             }
-            log.debug("Cerrando sesion de usuario para confirmar los cambios...");
-            return logout();
-        } catch (GBPersistenceException | NoSuchAlgorithmException ex) {
+            
+        } catch (GBPersistenceException | NoSuchAlgorithmException | GBException ex) {
             UIMessageManagement.putException(ex);
             log.error(ex.getMessage());
-            return "failed";
+            return ADNavigationActions.FAILED_LOGOUT;
         }
     }
 }
