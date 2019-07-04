@@ -19,7 +19,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.HashMap;
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -63,21 +62,29 @@ public class SecurityManagerController {
     }
     
     public void saveOldPwd(String gbPassword, GbUsers gbUsers) throws GBPersistenceException, GBException {
-        log.info("Salvando la contraseña anterior.");
+        log.info("Salvando la contraseña anterior:");
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("gbUsername", "admin");
+        parameters.put("gbUsername", gbUsers.getGbUsername());
+        log.info("Buscando la cantidad de contraseñas salvadas.");
         if(pwd_his_service.runSQL(GBSentencesRBOs.GBPWDHISTORY_FINDBYGBUSERNAME, parameters).size()>
            ADModuleConfigurationContoller.getInstance().getIntegerConfValue(ADModuleConfigurationCons.PWD_CANT_SAVE)){
-            // FALTA AQUI!!!!!!!!!!!!!
-        }else{
-            GbPwdHistory pwd_hist = new GbPwdHistory();
-            pwd_hist.setGbUsers(gbUsers);
-            pwd_hist.setGbPwdHistoryPK(new GbPwdHistoryPK(gbUsers.getGbUsername(), gbPassword));
-            pwd_hist.setCreateDt(Calendar.getInstance().getTime());
-            pwd_hist.setGbPwdInsDt(Calendar.getInstance().getTime());
-            pwd_hist.setRowversion(0);
-            pwd_his_service.save(pwd_hist);
+            log.info("Se ha llegado al limite de contraseñas guardadas, obteniendo la primera entrada guardada para eliminarla");
+            parameters = new HashMap<>();
+            parameters.put("gbUsername1", gbUsers.getGbUsername());
+            parameters.put("gbUsername2", gbUsers.getGbUsername());
+            GbPwdHistory pwd_hist = (GbPwdHistory) pwd_his_service.runSQL(GBSentencesRBOs.GBPWDHISTORY_FINDFIRSTENTRY, parameters).get(0);
+            pwd_his_service.delete(pwd_hist);
         }
+        log.info("Creando una nueva entrada de historial de cotnraseñas.");
+        GbPwdHistory pwd_hist = new GbPwdHistory();
+        pwd_hist.setGbUsers(gbUsers);
+        pwd_hist.setGbPwdHistoryPK(new GbPwdHistoryPK(gbUsers.getGbUsername(), gbPassword));
+        pwd_hist.setCreateDt(Calendar.getInstance().getTime());
+        pwd_hist.setGbPwdInsDt(Calendar.getInstance().getTime());
+        pwd_hist.setRowversion(0);
+        log.info("Salvando entrada de historial de contraseñas.");
+        pwd_his_service.save(pwd_hist);
+        log.info("Finaliza el salvado del historial de contraseñas.");
     }
     
     public boolean isPwdUsed(String user, String newPwd) throws GBPersistenceException, NoSuchAlgorithmException{
@@ -86,18 +93,18 @@ public class SecurityManagerController {
     }
     
     public boolean isAccomplishSecPol(String pwd) throws GBException, GBPersistenceException{
-        log.info("Buscando las politicas de seguridad, para validar la contraseña.");
+        log.info("Buscando las politicas de seguridad para validar la contraseña.");
         String regex = "^";
         if(ADModuleConfigurationContoller.getInstance().getBooleanConfValue(ADModuleConfigurationCons.PWD_ONE_NUM)){
             log.info("La contraseña debe contener al menos un digito.");
             regex=regex+"(?=\\w*\\d)";
         }
         if(ADModuleConfigurationContoller.getInstance().getBooleanConfValue(ADModuleConfigurationCons.PWD_ONE_MAY)){
-            log.info("La contraseña debe contener al una mayuscula.");
+            log.info("La contraseña debe contener al menos una mayuscula.");
             regex=regex+"(?=\\w*[A-Z])";
         }
         if(ADModuleConfigurationContoller.getInstance().getBooleanConfValue(ADModuleConfigurationCons.PWD_ONE_MIN)){
-            log.info("La contraseña debe contener al una minuscula.");
+            log.info("La contraseña debe contener al menos una minuscula.");
             regex=regex+"(?=\\w*[a-z])";
         }
         log.info("La contraseña debe tener una longitud minima "

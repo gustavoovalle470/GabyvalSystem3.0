@@ -73,9 +73,9 @@ public class UserSessionManager {
         gbuser.setGbLoginStatus(0);
         log.info("Guardando cambios de cambio de estado.");
         user_service.save(gbuser);
-        log.info("Removiendo sesión de usuario.");
+        log.info("Removiendo sesión de usuario de la lista de usuarios conectados.");
         users_online.remove(session);
-        log.info("Invalidando sesion de usuario.");
+        log.info("Invalidando sesion HTPP de usuario.");
         session.invalidate();
         log.info("Cierre de sesion completado.");
         return true;
