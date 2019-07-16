@@ -20,13 +20,13 @@
             <ul class="topbar-menu">
                     <li class="profile-item">
                         <a href="#">                            
-                            <p:graphicImage name="images/avatar.png" library="manhattan-layout" />
+                            <p:graphicImage value="#{UserSessionBean.profPhoto}"/>
                             <span class="topbar-item-name profile-name">#{UserSessionBean.username}</span>
                         </a>
 
                         <ul class="animated">
                             <h:form id="FormMenuProfile">
-                                <p:commandLink>
+                                <p:commandLink onclick="PF('profmanage').show();">
                                     <i class="fa fa-fw fa-user"></i>
                                     <span>Perfil</span>
                                     <span class="topbar-badge">5</span>
@@ -124,7 +124,7 @@
             
             
             <a href="#" class="topbar-menu-btn">
-                <p:graphicImage name="images/avatar.png" library="manhattan-layout" />
+                <p:graphicImage value="#{UserSessionBean.profPhoto}"/>
             </a>
             
             <a href="#" class="rightpanel-btn">
@@ -132,5 +132,4 @@
             </a>
         </div>
     </div>
-
 </ui:composition>
