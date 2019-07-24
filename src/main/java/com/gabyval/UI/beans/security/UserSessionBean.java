@@ -15,17 +15,10 @@ import com.gabyval.UI.security.menu.MenuFactory;
 import com.gabyval.UI.utils.ADNavigationActions;
 import com.gabyval.UI.utils.UIMessageManagement;
 import com.gabyval.controllers.security.UserSessionManager;
-import com.gabyval.controllers.user.GBStaffController;
 import com.gabyval.persistence.exception.GBPersistenceException;
-import com.gabyval.referencesbo.security.users.GbStaff;
-import com.mysql.cj.jdbc.Blob;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import javax.faces.application.FacesMessage;
 import org.apache.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.ByteArrayContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.menu.DefaultMenuModel;
 
 /**
