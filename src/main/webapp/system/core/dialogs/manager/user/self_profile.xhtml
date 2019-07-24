@@ -16,32 +16,32 @@
             <h:panelGrid columns="2" cellpadding="10">
                 <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
                     <p:outputLabel value="Foto:"/>
-                    <p:graphicImage id="GBPhotoProfile" value="#{UserSessionBean.profPhoto}"/>
+                    <p:graphicImage id="GBPhotoProfile" value="#{ProfileBean.profPhoto}"/>
                     <p:outputLabel/>
-                    <p:fileUpload fileUploadListener="#{UserSessionBean.handleFileUpload}" mode="advanced" auto="true"
+                    <p:fileUpload fileUploadListener="#{ProfileBean.handleFileUpload}" mode="advanced" auto="true"
                                   update="GrowlChangeProfile,GBPhotoProfile" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
                     <p:outputLabel value="Nombre:"/>
-                    <p:inputText value="#{UserSessionBean.profile_info.gbStaffName}"/>
+                    <p:inputText value="#{ProfileBean.profile_info.gbStaffName}"/>
                     <p:outputLabel value="Apellido:"/>
-                    <p:inputText value="#{UserSessionBean.profile_info.gbStaffSurname}"/>
+                    <p:inputText value="#{ProfileBean.profile_info.gbStaffSurname}"/>
                     <p:outputLabel value="Tipo documento:"/>
                     <p:inputText value="TIPO DOCUMENTO ES LISTA"/>
                     <p:outputLabel value="Documento:"/>
-                    <p:inputText value="#{UserSessionBean.profile_info.gbIdNumber}"/>
+                    <p:inputText value="#{ProfileBean.profile_info.gbIdNumber}"/>
                     <p:outputLabel value="Genero:"/>
                     <p:inputText value="GENERO ES UNA LISTA"/>
                     <p:outputLabel value="Fecha nacimiento:"/>
-                    <p:inputText value="#{UserSessionBean.profile_info.gbBirthdate}"/>
+                    <p:calendar value="#{ProfileBean.profile_info.gbBirthdate}" pattern="yyyy-MM-dd" mask="true"/>
                     <p:outputLabel value="Telefono:"/>
-                    <p:inputText value="#{UserSessionBean.profile_info.gbPhoneNumber}"/>
+                    <p:inputText value="#{ProfileBean.profile_info.gbPhoneNumber}"/>
                     <p:outputLabel value="Movil:"/>
-                    <p:inputText value="#{UserSessionBean.profile_info.gbMobileNumber}"/>
+                    <p:inputText value="#{ProfileBean.profile_info.gbMobileNumber}"/>
                     <p:outputLabel value="Correo:"/>
-                    <p:inputText value="#{UserSessionBean.profile_info.gbEmail}"/>
+                    <p:inputText value="#{ProfileBean.profile_info.gbEmail}"/>
                 </p:panelGrid>
                 <f:facet name="footer">
                     <div align="right">
-                        <p:commandButton value="Guardar perfil" action="#{UserSessionBean.changePassword()}" update="GrowlChangeProfile"/>
+                        <p:commandButton value="Guardar perfil" action="#{ProfileBean.saveProfile()}" update="GrowlChangeProfile"/>
                     </div>
                 </f:facet>  
             </h:panelGrid>
