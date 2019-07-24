@@ -41,18 +41,12 @@ public class UserSessionBean implements Serializable{
     private DefaultMenuModel user_sec_menu;
     private String pwd;
     private String repwd;
-    private GbStaff profile_info;
 
     public UserSessionBean(){
         log.info("Obteniendo datos de sesion.");
         session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         log.info("Obteniendo usuario conectado.");
         username = UserSessionManager.getInstance().getUser(session);
-        try {
-            profile_info=GBStaffController.getInstance().get_profile_info(username);
-        } catch (GBException ex) {
-            UIMessageManagement.putException(ex);
-        }
         log.info("Recuperando esquema de seguridad.");
         user_sec_menu = MenuFactory.getInstance().getSecMenuUser(username);
     }
@@ -65,14 +59,6 @@ public class UserSessionBean implements Serializable{
             UIMessageManagement.putException(ex);
             return false;
         }
-    }
-
-    public GbStaff getProfile_info() {
-        return profile_info;
-    }
-
-    public void setProfile_info(GbStaff profile_info) {
-        this.profile_info = profile_info;
     }
     
     public String getUsername() {
@@ -147,35 +133,6 @@ public class UserSessionBean implements Serializable{
             UIMessageManagement.putException(ex);
             log.error(ex.getMessage());
             return ADNavigationActions.FAILED_LOGOUT;
-        }
-    }
-    
-    public void handleFileUpload(FileUploadEvent event) {
-        profile_info.setGbPhoto(event.getFile().getContents());
-        try {
-            GBStaffController.getInstance().saveProfile(profile_info);
-        } catch (GBException ex) {
-            UIMessageManagement.putException(ex);
-            log.error(ex.getMessage());
-        }
-        UIMessageManagement.putInfoMessage("FOTO GUARDADA CON EXITO");
-    }
-    
-    public StreamedContent getProfPhoto(){
-        System.out.println("Tratando de cargar la foto");
-        System.out.println("Instancia del profile: "+profile_info);
-        System.out.println("Streaming de la foto: "+profile_info.getGbPhoto());
-        if(profile_info.getGbPhoto() == null){
-            System.out.println("Nulo");
-            return null;
-        }else{
-            try {
-                Blob blob = new Blob(profile_info.getGbPhoto(), null);
-                return new ByteArrayContent(blob.getBytes(1, (int) blob.length()));
-                //return new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()));
-            } catch (SQLException ex) {
-                return null;
-            }
         }
     }
 }
