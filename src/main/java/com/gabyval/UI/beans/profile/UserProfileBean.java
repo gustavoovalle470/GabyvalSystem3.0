@@ -6,7 +6,6 @@
 package com.gabyval.UI.beans.profile;
 
 import com.gabyval.Exceptions.GBException;
-import com.gabyval.UI.beans.security.UserSessionBean;
 import com.gabyval.UI.utils.UIMessageManagement;
 import com.gabyval.controllers.security.UserSessionManager;
 import com.gabyval.controllers.user.GBStaffController;

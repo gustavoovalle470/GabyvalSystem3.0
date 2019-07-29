@@ -5,10 +5,11 @@
  */
 package com.gabyval.UI.security.menu;
 
+import com.gabyval.Exceptions.GBException;
+import com.gabyval.controllers.security.SecurityMenuController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import com.gabyval.controllers.security.SecurityMenuManager;
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -26,7 +27,7 @@ public class MenuFactory {
     
     public MenuFactory(){
         log.info("Obteniendo todos los menus del sistema.");
-        allMenuSystem = SecurityMenuManager.getInstance().getAllMenuSystem();
+        allMenuSystem = SecurityMenuController.getInstance().getAllMenuSystem();
         log.info("Menus de sistema cargados en memoria.");
     }
     
@@ -62,12 +63,13 @@ public class MenuFactory {
         return subMenus;
     }
     
-    private HashMap<String, MenuDescriptor> getSecMenusByUser(String usernamne){
+    private HashMap<String, MenuDescriptor> getSecMenusByUser(String usernamne) throws GBException{
         HashMap<String, MenuDescriptor> user_menus = new HashMap<>();
-        List<String> user_menu_allow = SecurityMenuManager.getInstance().getMenuSec(usernamne);
-        for(String id : user_menu_allow){
-            user_menus.put(id, allMenuSystem.get(id));
-            String parentId = allMenuSystem.get(id).getParentId();
+        log.info("Iniciando consulta al servidor de base de datos para obtener los menus a los que el usuario "+usernamne+" tiene acceso");
+        List<Object> user_menu_allow = SecurityMenuController.getInstance().getMenuSec(usernamne);
+        for(Object id : user_menu_allow){
+            user_menus.put((String)id, allMenuSystem.get((String)id));
+            String parentId = allMenuSystem.get((String)id).getParentId();
             while(parentId != null){
                 user_menus.put(parentId, allMenuSystem.get(parentId));
                 parentId = allMenuSystem.get(parentId).getParentId();
@@ -76,7 +78,7 @@ public class MenuFactory {
         return organizeMenus(user_menus);
     }
     
-    public DefaultMenuModel getSecMenuUser(String username){
+    public DefaultMenuModel getSecMenuUser(String username) throws GBException{
         log.info("Obteniendo el arbol de seguridad para el usuario "+username);
         DefaultMenuModel user_menu = new DefaultMenuModel();
         HashMap<String, MenuDescriptor> user_desc = getSecMenusByUser(username);

@@ -6,17 +6,19 @@
 package com.gabyval.UI.beans.security;
 
 import com.gabyval.Exceptions.GBException;
+import com.gabyval.UI.security.menu.MenuFactory;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
-import com.gabyval.UI.security.menu.MenuFactory;
 import com.gabyval.UI.utils.ADNavigationActions;
 import com.gabyval.UI.utils.UIMessageManagement;
+import com.gabyval.controllers.security.SecurityMenuController;
 import com.gabyval.controllers.security.UserSessionManager;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
 import javax.faces.application.FacesMessage;
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -41,7 +43,11 @@ public class UserSessionBean implements Serializable{
         log.info("Obteniendo usuario conectado.");
         username = UserSessionManager.getInstance().getUser(session);
         log.info("Recuperando esquema de seguridad.");
-        user_sec_menu = MenuFactory.getInstance().getSecMenuUser(username);
+        try {
+            user_sec_menu = MenuFactory.getInstance().getSecMenuUser(username);
+        } catch (GBException ex) {
+            log.error(ex);
+        }
     }
     
     public boolean isPwdExpire(){
