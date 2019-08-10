@@ -35,8 +35,11 @@ public class SecurityMenuController {
         return instance;
     }
     
-    public HashMap<String, MenuDescriptor> getAllMenuSystem(){
+    public HashMap<String, MenuDescriptor> getAllMenuSystem() throws GBException{
         HashMap<String, MenuDescriptor> allMenuSystem = new HashMap<>();
+        if(menu_service == null){
+            throw new GBException("El sistema no pudo detectar menus en el sistema.");
+        }
         try {
             for(Object o : menu_service.getAll()){
                 GbMenulinks menu = (GbMenulinks) o;

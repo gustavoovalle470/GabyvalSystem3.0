@@ -15,29 +15,31 @@
                   closable="true">
             <h:panelGrid columns="2" cellpadding="10">
                 <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
-                    <p:outputLabel value="Foto:"/>
-                    <p:graphicImage id="GBPhotoProfile" value="#{ProfileBean.profPhoto}"/>
-                    <p:outputLabel/>
-                    <p:fileUpload fileUploadListener="#{ProfileBean.handleFileUpload}" mode="advanced" auto="true"
-                                  update="GrowlChangeProfile,GBPhotoProfile" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
-                    <p:outputLabel value="Nombre:"/>
-                    <p:inputText value="#{ProfileBean.profile_info.gbStaffName}"/>
-                    <p:outputLabel value="Apellido:"/>
-                    <p:inputText value="#{ProfileBean.profile_info.gbStaffSurname}"/>
-                    <p:outputLabel value="Tipo documento:"/>
-                    <p:inputText value="TIPO DOCUMENTO ES LISTA"/>
-                    <p:outputLabel value="Documento:"/>
-                    <p:inputText value="#{ProfileBean.profile_info.gbIdNumber}"/>
-                    <p:outputLabel value="Genero:"/>
-                    <p:inputText value="GENERO ES UNA LISTA"/>
-                    <p:outputLabel value="Fecha nacimiento:"/>
-                    <p:calendar value="#{ProfileBean.profile_info.gbBirthdate}" pattern="yyyy-MM-dd" mask="true"/>
-                    <p:outputLabel value="Telefono:"/>
-                    <p:inputText value="#{ProfileBean.profile_info.gbPhoneNumber}"/>
-                    <p:outputLabel value="Movil:"/>
-                    <p:inputText value="#{ProfileBean.profile_info.gbMobileNumber}"/>
-                    <p:outputLabel value="Correo:"/>
-                    <p:inputText value="#{ProfileBean.profile_info.gbEmail}"/>
+                    <p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
+                        <p:graphicImage id="GBPhotoProfile" value="#{ProfileBean.profPhoto}"/>
+                        <p:fileUpload fileUploadListener="#{ProfileBean.handleFileUpload}" mode="advanced" auto="true"
+                                      update="GrowlChangeProfile,GBPhotoProfile" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                    </p:panelGrid>
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Nombre:"/>
+                        <p:inputText value="#{ProfileBean.profile_info.gbStaffName}"/>
+                        <p:outputLabel value="Apellido:"/>
+                        <p:inputText value="#{ProfileBean.profile_info.gbStaffSurname}"/>
+                        <p:outputLabel value="Tipo documento:"/>
+                        <p:inputText value="TIPO DOCUMENTO ES LISTA"/>
+                        <p:outputLabel value="Documento:"/>
+                        <p:inputText value="#{ProfileBean.profile_info.gbIdNumber}"/>
+                        <p:outputLabel value="Genero:"/>
+                        <p:inputText value="GENERO ES UNA LISTA"/>
+                        <p:outputLabel value="Fecha nacimiento:"/>
+                        <p:calendar value="#{ProfileBean.profile_info.gbBirthdate}" pattern="yyyy-MM-dd" mask="true"/>
+                        <p:outputLabel value="Telefono:"/>
+                        <p:inputText value="#{ProfileBean.profile_info.gbPhoneNumber}"/>
+                        <p:outputLabel value="Movil:"/>
+                        <p:inputText value="#{ProfileBean.profile_info.gbMobileNumber}"/>
+                        <p:outputLabel value="Correo:"/>
+                        <p:inputText value="#{ProfileBean.profile_info.gbEmail}"/>
+                    </p:panelGrid>
                 </p:panelGrid>
                 <f:facet name="footer">
                     <div align="right">

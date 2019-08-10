@@ -25,13 +25,13 @@ public class MenuFactory {
     private static MenuFactory instance;
     private final HashMap<String, MenuDescriptor> allMenuSystem;
     
-    public MenuFactory(){
+    public MenuFactory() throws GBException{
         log.info("Obteniendo todos los menus del sistema.");
         allMenuSystem = SecurityMenuController.getInstance().getAllMenuSystem();
         log.info("Menus de sistema cargados en memoria.");
     }
     
-    public static MenuFactory getInstance(){
+    public static MenuFactory getInstance() throws GBException{
         if(instance == null){
             instance = new MenuFactory();
         }
