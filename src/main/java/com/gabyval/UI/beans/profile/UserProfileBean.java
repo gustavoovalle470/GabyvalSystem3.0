@@ -52,17 +52,12 @@ public class UserProfileBean {
     }
     
     public StreamedContent getProfPhoto(){
-        System.out.println("Tratando de cargar la foto");
-        System.out.println("Instancia del profile: "+profile_info);
-        System.out.println("Streaming de la foto: "+profile_info.getGbPhoto());
         if(profile_info.getGbPhoto() == null){
-            System.out.println("Nulo");
             return null;
         }else{
             try {
                 Blob blob = new Blob(profile_info.getGbPhoto(), null);
                 return new ByteArrayContent(blob.getBytes(1, (int) blob.length()));
-                //return new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()));
             } catch (SQLException ex) {
                 return null;
             }

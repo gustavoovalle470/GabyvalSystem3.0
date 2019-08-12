@@ -7,6 +7,7 @@ package com.gabyval.UI.security.menu;
 
 import com.gabyval.Exceptions.GBException;
 import com.gabyval.controllers.security.SecurityMenuController;
+import com.gabyval.referencesbo.security.profiling.GbMenuProfiling;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,12 +65,15 @@ public class MenuFactory {
     }
     
     private HashMap<String, MenuDescriptor> getSecMenusByUser(String usernamne) throws GBException{
+        System.out.println("allMenuSystem totales: "+allMenuSystem.size());
         HashMap<String, MenuDescriptor> user_menus = new HashMap<>();
         log.info("Iniciando consulta al servidor de base de datos para obtener los menus a los que el usuario "+usernamne+" tiene acceso");
         List<Object> user_menu_allow = SecurityMenuController.getInstance().getMenuSec(usernamne);
-        for(Object id : user_menu_allow){
-            user_menus.put((String)id, allMenuSystem.get((String)id));
-            String parentId = allMenuSystem.get((String)id).getParentId();
+        log.info("Menus recuperados "+user_menu_allow.size());
+        for(Object o : user_menu_allow){
+            GbMenuProfiling prof = (GbMenuProfiling) o;
+            user_menus.put(prof.getGbMenuProfilingPK().getGbMenuId(), allMenuSystem.get(prof.getGbMenuProfilingPK().getGbMenuId()));
+            String parentId = allMenuSystem.get(prof.getGbMenuProfilingPK().getGbMenuId()).getParentId();
             while(parentId != null){
                 user_menus.put(parentId, allMenuSystem.get(parentId));
                 parentId = allMenuSystem.get(parentId).getParentId();

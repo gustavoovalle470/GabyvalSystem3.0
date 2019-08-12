@@ -11,7 +11,12 @@ import com.gabyval.UI.security.menu.MenuDescriptor;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.GBSentencesRBOs;
 import com.gabyval.referencesbo.security.menu.GbMenulinks;
+import com.gabyval.referencesbo.security.profiling.GbMenuProfiling;
+import com.gabyval.referencesbo.security.profiling.GbUserProfiling;
 import com.gabyval.services.security.menu.GBMenuLinkService;
+import com.gabyval.services.security.profiling.GBMenuProfilingServices;
+import com.gabyval.services.security.profiling.GBUserProfiilingService;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +30,16 @@ import org.springframework.stereotype.Controller;
 public class SecurityMenuController {
     @Autowired
     private GBMenuLinkService menu_service;
+    @Autowired
+    private GBMenuProfilingServices profiling_service;
+    @Autowired
+    private GBUserProfiilingService sec_prof_service;
     private final Logger log = Logger.getLogger(SecurityMenuController.class);
     private static SecurityMenuController instance;
+    
+    public SecurityMenuController(){
+        instance=this;
+    }
     
     public static SecurityMenuController getInstance(){
         if(instance == null){
@@ -48,33 +61,27 @@ public class SecurityMenuController {
         } catch (GBPersistenceException ex) {
             log.error(ex);
         }
-//        allMenuSystem.put("1", new MenuDescriptor("1", "Prueba 1", "Prueba 1", "Prueba 1", null));
-//        allMenuSystem.put("1.1", new MenuDescriptor("1.1", "Prueba 1.1", "Prueba 1.1", "Prueba 1.1", "1"));
-//        allMenuSystem.put("1.1.1", new MenuDescriptor("1.1.1", "Prueba 1.1.1", "Prueba 1.1.1", "Prueba 1.1.1", "1.1"));
-//        allMenuSystem.put("1.1.2", new MenuDescriptor("1.1.2", "Prueba 1.1.2", "Prueba 1.1.2", "Prueba 1.1.2", "1.1"));
-//        allMenuSystem.put("1.2", new MenuDescriptor("1.2", "Prueba 1.2", "Prueba 1.2", "Prueba 1.2", "1"));
-//        allMenuSystem.put("1.3", new MenuDescriptor("1.3", "Prueba 1.3", "Prueba 1.3", "Prueba 1.3", "1"));
-//        allMenuSystem.put("1.3.1", new MenuDescriptor("1.3.1", "Prueba 1.3.1", "Prueba 1.3.1", "Prueba 1.3.1", "1.3"));
-//        allMenuSystem.put("1.3.2", new MenuDescriptor("1.3.2", "Prueba 1.3.2", "Prueba 1.3.2", "Prueba 1.3.2", "1.3"));
-//        allMenuSystem.put("2", new MenuDescriptor("2", "Prueba 2", "Prueba 2", "Prueba 2", null));
         return allMenuSystem;
     }
     
     public List<Object> getMenuSec(String username) throws GBException{
         log.info("Ejecutando sentencia.");
-//       try {
+        List menus = new ArrayList();
+       try {
             HashMap<String, Object> parameters= new HashMap<>();
             parameters.put("gbUsername", username);
-//            return menu_service.runSQL(GBSentencesRBOs.GBMENULINKS_FINDBYUSERNAME, parameters);
-//        } catch (GBPersistenceException ex) {
-//            log.error(ex.getMessage());
-//            throw new GBException("Se ha producido un error al tratar de obtener los menus del usuario "+username);
-//        }
-//        ArrayList<String> menusId = new ArrayList<>();
-//        menusId.add("1.1.1");
-//        menusId.add("1.1.2");
-//        menusId.add("2");
-//        return menusId;
-        return null;
+            HashMap<String, Object> parameters2= new HashMap<>();
+            for (Object o :sec_prof_service.runSQL(GBSentencesRBOs.GBUSERPROFILING_FINDBYGBUSERNAME, parameters)){
+                GbUserProfiling prof = (GbUserProfiling) o;
+                log.info("Obteniendo menus para el perfil "+prof.getGbUserProfilingPK().getGbProfile()+" que ha sido asignado al usuario "+username);
+                parameters2.put("gbProfile", prof.getGbUserProfilingPK().getGbProfile());
+                menus.addAll(profiling_service.runSQL(GBSentencesRBOs.GBMENUPROFILING_FINDBYGBPROFILE, parameters2));
+                parameters2.remove("gbProfile", prof.getGbUserProfilingPK().getGbProfile());
+            }
+            return menus;
+        } catch (GBPersistenceException ex) {
+            log.error(ex.getMessage());
+            throw new GBException("Se ha producido un error al tratar de obtener los menus del usuario "+username);
+        }
     }
 }
