@@ -87,6 +87,7 @@ public class MenuFactory {
         DefaultMenuModel user_menu = new DefaultMenuModel();
         HashMap<String, MenuDescriptor> user_desc = getSecMenusByUser(username);
         for(String id: user_desc.keySet()){
+            System.out.println("Creando menu...");
             MenuDescriptor descriptor = user_desc.get(id);
             if(descriptor.isPrincipalNode() || descriptor.isNode()){
                 user_menu.addElement(assembleSubmenu(descriptor));
@@ -96,6 +97,7 @@ public class MenuFactory {
     }
     
     public DefaultSubMenu assembleSubmenu(MenuDescriptor descriptor){
+        System.out.println("Submenu Asmbler");
         DefaultSubMenu sub = new DefaultSubMenu(descriptor.getLabel());
         sub.setIcon(descriptor.getIcon());
         sub.setId(descriptor.getId());
@@ -104,14 +106,19 @@ public class MenuFactory {
     }
 
     private List<MenuElement> assembleMenuItems(ArrayList<MenuDescriptor> subMenus) {
+        System.out.println("Menu Asmbler");
         List<MenuElement> menus_to_return = new ArrayList<>();
         for(MenuDescriptor descriptor: subMenus){
+            System.out.println("Creando "+descriptor.getLabel()+" node "+descriptor.isNode()+" principal "+descriptor.isPrincipalNode());
             if(descriptor.isNode() || descriptor.isPrincipalNode()){
+                System.out.println("Es subMenu: "+descriptor.getLabel());
                 menus_to_return.add(assembleSubmenu(descriptor));
             }else{
+                System.out.println("Menu: "+descriptor.getLabel());
                 DefaultMenuItem item = new DefaultMenuItem(descriptor.getLabel());
                 item.setId(descriptor.getId());
                 item.setIcon(descriptor.getIcon());
+                System.out.println("Accion recuperada: "+descriptor.getAction());
                 item.setCommand(descriptor.getAction());
                 menus_to_return.add(item);
             }

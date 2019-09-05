@@ -81,6 +81,6 @@ public class MenuDescriptor {
     }
     
     public boolean isNode(){
-        return (parentId==null || subMenus != null);
+        return (parentId==null || !subMenus.isEmpty());
     }
 }
