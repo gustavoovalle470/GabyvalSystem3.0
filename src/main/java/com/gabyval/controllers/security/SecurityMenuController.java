@@ -11,6 +11,7 @@ import com.gabyval.UI.security.menu.MenuDescriptor;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.GBSentencesRBOs;
 import com.gabyval.referencesbo.security.menu.GbMenulinks;
+import com.gabyval.referencesbo.security.profiling.GbMenuProfiling;
 import com.gabyval.referencesbo.security.profiling.GbUserProfiling;
 import com.gabyval.services.security.menu.GBMenuLinkService;
 import com.gabyval.services.security.profiling.GBMenuProfilingServices;

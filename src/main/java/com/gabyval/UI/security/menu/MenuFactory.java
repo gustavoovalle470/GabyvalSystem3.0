@@ -40,7 +40,6 @@ public class MenuFactory {
     }
 
     private HashMap<String, MenuDescriptor> organizeMenus(HashMap<String, MenuDescriptor> to_organize) {
-        log.info("Organizando los menus por jerarquia.");
         HashMap<String, MenuDescriptor> organizeMenus = new  HashMap<>();
         to_organize.keySet().forEach((menuId) -> {
             MenuDescriptor descriptor=to_organize.get(menuId);
@@ -49,20 +48,16 @@ public class MenuFactory {
                 organizeMenus.put(menuId, descriptor);
             }
         });
-        log.info("Retornando menus a mostrar.");
         return organizeMenus;
     }
 
     private ArrayList<MenuDescriptor> getSubMenus(String menuId, HashMap<String, MenuDescriptor> to_organize) {
-        log.info("Obteniendo y organizando sub menus en menus nodo.");
         ArrayList<MenuDescriptor> subMenus = new ArrayList<>();
         for(MenuDescriptor descriptor: to_organize.values()){
             if(descriptor.getParentId() != null && descriptor.getParentId().equals(menuId)){
                 if(descriptor.isNode()){
-                    log.info("El menu "+menuId+" es un nodo obteniendo los sub menus");
                     descriptor.setSubMenus(getSubMenus(descriptor.getId(), to_organize));
                 }
-                log.info("El adicionando el menu "+menuId+" a la jerarquia");
                 subMenus.add(descriptor);
             }
         }
@@ -70,6 +65,7 @@ public class MenuFactory {
     }
     
     private HashMap<String, MenuDescriptor> getSecMenusByUser(String usernamne) throws GBException{
+        System.out.println("allMenuSystem totales: "+allMenuSystem.size());
         HashMap<String, MenuDescriptor> user_menus = new HashMap<>();
         log.info("Iniciando consulta al servidor de base de datos para obtener los menus a los que el usuario "+usernamne+" tiene acceso");
         List<Object> user_menu_allow = SecurityMenuController.getInstance().getMenuSec(usernamne);
@@ -83,7 +79,6 @@ public class MenuFactory {
                 parentId = allMenuSystem.get(parentId).getParentId();
             }
         }
-        log.info("Los menus han para el usuario "+usernamne+" han sido cargados con exito.");
         return organizeMenus(user_menus);
     }
     
@@ -97,29 +92,23 @@ public class MenuFactory {
                 user_menu.addElement(assembleSubmenu(descriptor));
             }
         }
-        log.info("Los menus han para el usuario "+username+" han sido cargados con exito.");
         return user_menu;
     }
     
     public DefaultSubMenu assembleSubmenu(MenuDescriptor descriptor){
-        log.info("Creando sub menu: "+descriptor.getLabel());
         DefaultSubMenu sub = new DefaultSubMenu(descriptor.getLabel());
         sub.setIcon(descriptor.getIcon());
         sub.setId(descriptor.getId());
         sub.setElements(assembleMenuItems(descriptor.getSubMenus()));
-        log.info("Sub menu: "+descriptor.getLabel()+" creado.");
         return sub;
     }
 
     private List<MenuElement> assembleMenuItems(ArrayList<MenuDescriptor> subMenus) {
-        log.info("Creando menu items");
         List<MenuElement> menus_to_return = new ArrayList<>();
         for(MenuDescriptor descriptor: subMenus){
             if(descriptor.isNode() || descriptor.isPrincipalNode()){
-                log.info("El item es nodo, creando sub menus");
                 menus_to_return.add(assembleSubmenu(descriptor));
             }else{
-                log.info("El item no es nodo, creando menu item");
                 DefaultMenuItem item = new DefaultMenuItem(descriptor.getLabel());
                 item.setId(descriptor.getId());
                 item.setIcon(descriptor.getIcon());
@@ -127,7 +116,6 @@ public class MenuFactory {
                 menus_to_return.add(item);
             }
         }
-        log.info("Finaliza la construccion del menu.");
         return menus_to_return;
     }
 }
