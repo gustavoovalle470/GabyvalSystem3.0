@@ -5,53 +5,15 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">#{SystemInfoBean.header_view}</ui:define>
-
-    <ui:define name="head">
-           <script type="text/javascript">
-               //<![CDATA[
-               function skinBar() {
-                   this.cfg.shadow = false;
-                   this.cfg.title = '';
-                   this.cfg.seriesColors = ['#3984b8','#7e8dcd'];
-                   this.cfg.grid = {
-                       background: '#ffffff',
-                       borderColor: '#ffffff',
-                       gridLineColor: '#dee4e9',
-                       shadow: false
-                   };
-                   this.cfg.axesDefaults = {
-                       borderWidth: 0.1,
-                       borderColor: 'dce2e7',
-                       rendererOptions: {
-                           textColor: '#757575'
-                       }
-                   };
-                   this.cfg.seriesDefaults = {
-                       shadow: false,
-                       lineWidth: 1,
-                       renderer: $.jqplot.BarRenderer,
-                       markerOptions: {
-                           shadow: false,
-                           size: 7,
-                           style: 'circle'
-                       }
-                   }
-               }
-               //]]>
-           </script>
-           <style type="text/css">
-               .main-content {
-                   padding: 0;
-               }
-           </style>
-       </ui:define>
-
     <ui:define name="content">
         <div class="card" style="width: 100%; height: 500px;">
             <h:form>
                 <div align="center">
-                    <h1>Usuarios.....</h1>
+                    <p:dataTable>
+                        <f:facet name="header">
+                            Usuario del sistema
+                        </f:facet>
+                    </p:dataTable>
                 </div>
             </h:form>
         </div>

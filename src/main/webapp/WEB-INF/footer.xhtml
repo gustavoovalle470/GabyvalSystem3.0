@@ -6,13 +6,15 @@
     xmlns:p="http://primefaces.org/ui">
     
     <div class="layout-footer clearfix">
-        <a href="dashboard.xhtml">
-            <p:graphicImage name="images/logo.png" library="manhattan-layout" height="20"/>
-        </a>
-        <div class="layout-footer-icons">
-            <a href="https://github.com/primefaces"><i class="fa fa-github"></i></a>
-            <a href="https://www.facebook.com/groups/primefaces"><i class="fa fa-facebook"></i></a>
-            <a href="http://twitter.com/primefaces"><i class="fa fa-twitter"></i></a>
-        </div>
+        <h:form id="FotterBarform">
+            <p:commandLink action="/dashboard.xhtml?faces-redirect=true">
+                <p:graphicImage name="images/gabyval.png" library="manhattan-layout" height="20"/>
+            </p:commandLink>
+            <div class="layout-footer-icons">
+                <a href="https://github.com/primefaces"><i class="fa fa-github"></i></a>
+                <a href="https://www.facebook.com/groups/primefaces"><i class="fa fa-facebook"></i></a>
+                <a href="http://twitter.com/primefaces"><i class="fa fa-twitter"></i></a>
+            </div>
+        </h:form>
     </div>
 </ui:composition>

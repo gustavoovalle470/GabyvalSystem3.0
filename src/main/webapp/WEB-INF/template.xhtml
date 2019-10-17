@@ -13,7 +13,8 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
                 <meta name="apple-mobile-web-app-capable" content="yes" />
             </f:facet>
-            <title><ui:insert name="title">Template Web Manhattan</ui:insert></title>
+            <link rel="icon" href="/resources/manhattan-layout/images/FavIcon.png" type="image/x-icon"/>
+            <title>#{SystemInfoBean.header_view}</title>
             <h:outputScript name="js/nanoscroller.js" library="manhattan-layout" />
             <h:outputScript name="js/layout.js" library="manhattan-layout" />
             <script type="text/javascript">
@@ -23,6 +24,7 @@
                     }
                 }
             </script>
+            <link rel="icon" href="resources/manhattan-layout/images/FavIcon.png" type="image/x-icon"/>
             <ui:insert name="head"/>
         </h:head>
 

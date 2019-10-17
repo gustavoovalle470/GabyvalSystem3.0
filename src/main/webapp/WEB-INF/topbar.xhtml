@@ -10,7 +10,7 @@
         <a href="#" id="layout-menu-btn" class="menu-btn">
             <i class="fa fa-bars"></i>
         </a>
-        
+
         <div class="topbar-search">
             <input type="text" class="ui-widget" />
             <i class="fa fa-search"></i>
@@ -19,8 +19,8 @@
         <div class="layout-topbar-menu-wrapper">            
             <ul class="topbar-menu">
                     <li class="profile-item">
-                        <a href="#">                            
-                            <p:graphicImage value="#{ProfileBean.profPhoto}"/>
+                        <a href="#">                     
+                            <p:graphicImage value="#{ProfileBean.photo_profile}" cache="false"/>
                             <span class="topbar-item-name profile-name">#{UserSessionBean.username}</span>
                         </a>
 
@@ -121,12 +121,12 @@
                         </ul>
                     </li>
                 </ul>
-            
-            
+
+
             <a href="#" class="topbar-menu-btn">
-                <p:graphicImage value="#{ProfileBean.profPhoto}"/>
+                <p:graphicImage value="#{ProfileBean.photo_profile}" cache="false"/>
             </a>
-            
+
             <a href="#" class="rightpanel-btn">
                 <i class="topbar-icon fa fa-fw fa-outdent"></i>
             </a>

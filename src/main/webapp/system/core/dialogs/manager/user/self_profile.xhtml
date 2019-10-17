@@ -4,7 +4,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
-    <h:form>
+    <h:form id="GBSelfProfile">
         <p:growl id="GrowlChangeProfile" showDetail="true">
             <p:autoUpdate/>
         </p:growl>
@@ -16,9 +16,11 @@
             <h:panelGrid columns="2" cellpadding="10">
                 <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
                     <p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
-                        <p:graphicImage id="GBPhotoProfile" value="#{ProfileBean.profPhoto}"/>
+                        <p:graphicImage id="GBPhotoProfile" value="#{ProfileBean.photo_profile}" cache="false"/>
                         <p:fileUpload fileUploadListener="#{ProfileBean.handleFileUpload}" mode="advanced" auto="true"
-                                      update="GrowlChangeProfile,GBPhotoProfile" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                      update="GrowlChangeProfile,GBPhotoProfile" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" >
+                            <p:autoUpdate/>
+                        </p:fileUpload>
                     </p:panelGrid>
                     <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
                         <p:outputLabel value="Nombre:"/>
@@ -43,7 +45,7 @@
                 </p:panelGrid>
                 <f:facet name="footer">
                     <div align="right">
-                        <p:commandButton value="Guardar perfil" action="#{ProfileBean.saveProfile()}" update="GrowlChangeProfile"/>
+                        <p:commandButton value="Guardar perfil" action="#{ProfileBean.saveProfile()}" update="GrowlChangeProfile,GBSelfProfile"/>
                     </div>
                 </f:facet>  
             </h:panelGrid>

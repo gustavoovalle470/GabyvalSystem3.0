@@ -10,15 +10,15 @@ import com.gabyval.UI.utils.UIMessageManagement;
 import com.gabyval.controllers.security.UserSessionManager;
 import com.gabyval.controllers.user.GBStaffController;
 import com.gabyval.referencesbo.security.users.GbStaff;
-import com.mysql.cj.jdbc.Blob;
-import java.sql.SQLException;
+import java.io.ByteArrayInputStream;
+import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.ByteArrayContent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 
@@ -26,16 +26,18 @@ import org.primefaces.model.StreamedContent;
  *
  * @author OvalleGA
  */
-@RequestScoped
+@SessionScoped
 @ManagedBean(name = "ProfileBean")
-public class UserProfileBean {
+public class UserProfileBean implements Serializable{
     private final Logger log = Logger.getLogger(UserProfileBean.class);
+    private StreamedContent photo_profile;
     private GbStaff profile_info;
     
     public UserProfileBean(){
         try {
             log.info("Obteniendo el perfil de usuario.");
             profile_info=GBStaffController.getInstance().get_profile_info(UserSessionManager.getInstance().getUser((HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true)));
+            photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()), "image/png");
             log.info("Perfil de usuario cargado.");
         } catch (GBException ex) {
             log.error("El perfil del usuario no pudo ser cargado.");
@@ -43,6 +45,14 @@ public class UserProfileBean {
         }
     }
 
+    public StreamedContent getPhoto_profile() {
+        return photo_profile;
+    }
+
+    public void setPhoto_profile(StreamedContent photo_profile) {
+        this.photo_profile = photo_profile;
+    }
+    
     public GbStaff getProfile_info() {
         return profile_info;
     }
@@ -51,32 +61,22 @@ public class UserProfileBean {
         this.profile_info = profile_info;
     }
     
-    public StreamedContent getProfPhoto(){
-        if(profile_info.getGbPhoto() == null){
-            return null;
-        }else{
-            try {
-                Blob blob = new Blob(profile_info.getGbPhoto(), null);
-                return new ByteArrayContent(blob.getBytes(1, (int) blob.length()));
-            } catch (SQLException ex) {
-                return null;
-            }
-        }
-    }
-    
     public void handleFileUpload(FileUploadEvent event) {
         profile_info.setGbPhoto(event.getFile().getContents());
+        photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()), "image/png");
         try {
             GBStaffController.getInstance().saveProfile(profile_info);
         } catch (GBException ex) {
             UIMessageManagement.putException(ex);
             log.error(ex.getMessage());
         }
+        photo_profile=getPhoto_profile();
         UIMessageManagement.putInfoMessage("FOTO GUARDADA CON EXITO");
     }
     
     public void saveProfile(){
         try {
+            photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()), "image/png");
             GBStaffController.getInstance().saveProfile(profile_info);
         } catch (GBException ex) {
             UIMessageManagement.putException(ex);

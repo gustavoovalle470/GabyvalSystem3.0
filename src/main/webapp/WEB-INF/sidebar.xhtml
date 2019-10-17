@@ -8,9 +8,11 @@
 
     <div class="layout-sidebar">
         <div class="layout-sidebar-logo">
-            <a href="dashboard.xhtml">
-                <p:graphicImage name="images/logo-manhattan.png" library="manhattan-layout" />
-            </a>
+            <h:form id="HeaderSideBarform">
+                <p:commandLink action="/dashboard.xhtml?faces-redirect=true">
+                    <p:graphicImage name="images/gbIconSmall.png" library="manhattan-layout"/>
+                </p:commandLink>
+            </h:form>
             <a href="#" id="layout-sidebar-anchor" class="layout-sidebar-anchor" title="Toggle Menu">
                 <i class="fa"></i>
             </a>

@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">Dashboard</ui:define>
+    <ui:define name="title">#{SystemInfoBean.header_view}</ui:define>
 
     <ui:define name="head">
            <script type="text/javascript">
@@ -48,13 +48,15 @@
        </ui:define>
 
     <ui:define name="content">
-        <div class="card" style="width: 100%; height: 500px;">
-            <h:form>
-                <div align="center">
-                    <h1>Bienvenido a su sistema NOMBRE_SISTEMA</h1>
-                </div>
-            </h:form>
-        </div>
+        <h:form>
+            <div class="card" style="width: 100%; height: 500px;">
+                <h:form>
+                    <div align="center">
+                        <h1>Bienvenido a su sistema #{SystemInfoBean.app_name}</h1>
+                    </div>
+                </h:form>
+            </div>
+        </h:form>
     </ui:define>
 
 </ui:composition>
