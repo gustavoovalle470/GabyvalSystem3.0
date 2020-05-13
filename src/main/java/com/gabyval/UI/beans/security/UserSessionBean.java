@@ -36,11 +36,11 @@ public class UserSessionBean implements Serializable{
     private String repwd;
 
     public UserSessionBean(){
-        log.info("Obteniendo datos de sesion.");
+        log.debug("Obteniendo datos de sesion.");
         session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        log.info("Obteniendo usuario conectado.");
+        log.debug("Obteniendo usuario conectado.");
         username = UserSessionManager.getInstance().getUser(session);
-        log.info("Recuperando esquema de seguridad.");
+        log.debug("Recuperando esquema de seguridad.");
         try {
             user_sec_menu = MenuFactory.getInstance().getSecMenuUser(username);
         } catch (GBException ex) {
@@ -96,13 +96,13 @@ public class UserSessionBean implements Serializable{
     
     public String logout(){
         try {
-            log.info("Cerrando sesion del usuario: "+username);
+            log.debug("Cerrando sesion del usuario: "+username);
             if (UserSessionManager.getInstance().disconectUser(session)) {
                 UIMessageManagement.putInfoMessage("La sesion del usuario "+username+" finalizó correctamente.");
-                log.info("Cierre de sesion finalizado redirigiendo a paginal principal.");
+                log.debug("Cierre de sesion finalizado redirigiendo a paginal principal.");
                 return ADNavigationActions.LOGOUT;
             } else {
-                log.info("El cierre de sesion no se pudo lograr.");
+                log.debug("El cierre de sesion no se pudo lograr.");
                 return ADNavigationActions.FAILED_LOGOUT;
             }
         } catch (GBPersistenceException ex) {
@@ -114,14 +114,14 @@ public class UserSessionBean implements Serializable{
     
     public String changePassword(){
         try {
-            log.info("Cambiando la contraseña para el usuario "+username);
-            log.info("Pasword ingresada: "+pwd+" confirmacion: "+repwd);
+            log.debug("Cambiando la contraseña para el usuario "+username);
+            log.debug("Pasword ingresada: "+pwd+" confirmacion: "+repwd);
             if(pwd != null && repwd != null && pwd.equals(repwd)){
                 UserSessionManager.getInstance().changePwd(session, repwd);
-                log.info("Cerrando sesion de usuario para confirmar los cambios...");
+                log.debug("Cerrando sesion de usuario para confirmar los cambios...");
                 return logout();
             }else{
-                log.info("Las contraseñas ingresadas no coinciden.");
+                log.debug("Las contraseñas ingresadas no coinciden.");
                 UIMessageManagement.putCustomMessage(FacesMessage.SEVERITY_ERROR, "ERROR", "Las contraseñas ingresadas no coinciden.");                
                 return ADNavigationActions.FAILED_LOGOUT;
             }

@@ -5,6 +5,7 @@
  */
 package com.gabyval.controllers.security;
 
+import com.gabyval.UI.utils.UIConstants;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.system.AdMessages;
 import com.gabyval.services.system.ADMessageService;
@@ -36,9 +37,9 @@ public class GBMessageContoller {
         AdMessages message= msg_service.load(error_id);
         if(replace_values != null){
             String msg_desc = message.getMessageDesc();
-            String[] values = replace_values.split(",");
+            String[] values = replace_values.split(UIConstants.MESSAGE_DATA_SEPARATOR);
             for(String value: values){
-                msg_desc=msg_desc.replaceFirst("&", value);
+                msg_desc=msg_desc.replaceFirst(UIConstants.MESSAGE_REPLACE, value);
             }
             message.setMessageDesc(msg_desc);
         }

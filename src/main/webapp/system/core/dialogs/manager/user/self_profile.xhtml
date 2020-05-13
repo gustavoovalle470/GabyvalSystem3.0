@@ -16,9 +16,9 @@
             <h:panelGrid columns="2" cellpadding="10">
                 <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
                     <p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
-                        <p:graphicImage id="GBPhotoProfile" value="#{ProfileBean.photo_profile}" cache="false"/>
-                        <p:fileUpload fileUploadListener="#{ProfileBean.handleFileUpload}" mode="advanced" auto="true"
-                                      update="GrowlChangeProfile,GBPhotoProfile" sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" >
+                        <p:graphicImage value="#{ProfileBean.photo_profile}" width="100" height="100" cache="false"/>
+                        <p:fileUpload id="GBPhotoProfile" fileUploadListener="#{ProfileBean.handleFileUpload}" mode="advanced" auto="true"
+                                      update="GrowlChangeProfile,GBPhotoProfile" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" >
                             <p:autoUpdate/>
                         </p:fileUpload>
                     </p:panelGrid>

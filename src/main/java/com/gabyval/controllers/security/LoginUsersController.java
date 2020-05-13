@@ -29,7 +29,7 @@ public class LoginUsersController {
     private GBUserService user_service;
     
     public LoginUsersController(){
-        log.info("Creando instancia del controlador LoginUsersController");
+        log.debug("Creando instancia del controlador LoginUsersController");
         instance=this;
     }
     
@@ -41,18 +41,18 @@ public class LoginUsersController {
     }
     
     public boolean ValidateCredentials(String user, String password, HttpSession session) throws GBException, GBPersistenceException, NoSuchAlgorithmException {
-        log.info("Validando credenciales de usuario. Aplicando seguridad.");
+        log.debug("Validando credenciales de usuario. Aplicando seguridad.");
         String pwd_enc = SecurityUtils.encryptPwd(password);
-        log.info("Iniciando validaciones:");
+        log.debug("Iniciando validaciones:");
         isInvalidCrendetial(user, pwd_enc);
-        log.info("Registrando sesion de usuario:");
+        log.debug("Registrando sesion de usuario:");
         UserSessionManager.getInstance().connectUser(user, session);
-        log.info("Redireccionando a la pagina principal.");
+        log.debug("Redireccionando a la pagina principal.");
         return true;
     }
 
     private boolean isInvalidCrendetial(String user, String password) throws GBException, GBPersistenceException{
-        log.info("Obteniendo usuario de la base de datos: "+user);
+        log.debug("Obteniendo usuario de la base de datos: "+user);
         GbUsers gbuser=user_service.load(user);
         if(gbuser == null){
             log.error("El usuario "+user+" no pudo ser encontrado en la base de datos.");
@@ -70,7 +70,7 @@ public class LoginUsersController {
             log.error("El usuario "+user+" no tiene un estado operativo valido.");
             throw new GBException(12, user);
         }
-        log.info("Las credenciales proporcionadas fueron validadas con exito.");
+        log.debug("Las credenciales proporcionadas fueron validadas con exito.");
         return true;
     }
 }

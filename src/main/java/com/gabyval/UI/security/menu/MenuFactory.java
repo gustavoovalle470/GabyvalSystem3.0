@@ -27,9 +27,9 @@ public class MenuFactory {
     private final HashMap<String, MenuDescriptor> allMenuSystem;
     
     public MenuFactory() throws GBException{
-        log.info("Obteniendo todos los menus del sistema.");
+        log.debug("Obteniendo todos los menus del sistema.");
         allMenuSystem = SecurityMenuController.getInstance().getAllMenuSystem();
-        log.info("Menus de sistema cargados en memoria.");
+        log.debug("Menus de sistema cargados en memoria.");
     }
     
     public static MenuFactory getInstance() throws GBException{
@@ -65,11 +65,10 @@ public class MenuFactory {
     }
     
     private HashMap<String, MenuDescriptor> getSecMenusByUser(String usernamne) throws GBException{
-        System.out.println("allMenuSystem totales: "+allMenuSystem.size());
         HashMap<String, MenuDescriptor> user_menus = new HashMap<>();
-        log.info("Iniciando consulta al servidor de base de datos para obtener los menus a los que el usuario "+usernamne+" tiene acceso");
+        log.debug("Iniciando consulta al servidor de base de datos para obtener los menus a los que el usuario "+usernamne+" tiene acceso");
         List<Object> user_menu_allow = SecurityMenuController.getInstance().getMenuSec(usernamne);
-        log.info("Menus recuperados "+user_menu_allow.size());
+        log.debug("Menus recuperados "+user_menu_allow.size());
         for(Object o : user_menu_allow){
             GbMenuProfiling prof = (GbMenuProfiling) o;
             user_menus.put(prof.getGbMenuProfilingPK().getGbMenuId(), allMenuSystem.get(prof.getGbMenuProfilingPK().getGbMenuId()));
@@ -83,11 +82,10 @@ public class MenuFactory {
     }
     
     public DefaultMenuModel getSecMenuUser(String username) throws GBException{
-        log.info("Obteniendo el arbol de seguridad para el usuario "+username);
+        log.debug("Obteniendo el arbol de seguridad para el usuario "+username);
         DefaultMenuModel user_menu = new DefaultMenuModel();
         HashMap<String, MenuDescriptor> user_desc = getSecMenusByUser(username);
         for(String id: user_desc.keySet()){
-            System.out.println("Creando menu...");
             MenuDescriptor descriptor = user_desc.get(id);
             if(descriptor.isPrincipalNode() || descriptor.isNode()){
                 user_menu.addElement(assembleSubmenu(descriptor));
@@ -97,7 +95,6 @@ public class MenuFactory {
     }
     
     public DefaultSubMenu assembleSubmenu(MenuDescriptor descriptor){
-        System.out.println("Submenu Asmbler");
         DefaultSubMenu sub = new DefaultSubMenu(descriptor.getLabel());
         sub.setIcon(descriptor.getIcon());
         sub.setId(descriptor.getId());
@@ -106,19 +103,14 @@ public class MenuFactory {
     }
 
     private List<MenuElement> assembleMenuItems(ArrayList<MenuDescriptor> subMenus) {
-        System.out.println("Menu Asmbler");
         List<MenuElement> menus_to_return = new ArrayList<>();
         for(MenuDescriptor descriptor: subMenus){
-            System.out.println("Creando "+descriptor.getLabel()+" node "+descriptor.isNode()+" principal "+descriptor.isPrincipalNode());
             if(descriptor.isNode() || descriptor.isPrincipalNode()){
-                System.out.println("Es subMenu: "+descriptor.getLabel());
                 menus_to_return.add(assembleSubmenu(descriptor));
             }else{
-                System.out.println("Menu: "+descriptor.getLabel());
                 DefaultMenuItem item = new DefaultMenuItem(descriptor.getLabel());
                 item.setId(descriptor.getId());
                 item.setIcon(descriptor.getIcon());
-                System.out.println("Accion recuperada: "+descriptor.getAction());
                 item.setCommand(descriptor.getAction());
                 menus_to_return.add(item);
             }

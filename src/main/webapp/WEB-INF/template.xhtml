@@ -32,6 +32,7 @@
                 <p:growl id="PrincipalGrowlApp" showDetail="true">
                 <p:autoUpdate/>
                 </p:growl>
+            <h:form>
                 <div class="layout-wrapper #{guestPreferences.layoutStyleClass}">
                     <div class="layout-main">
                         <ui:include src="./dialogs.xhtml" />
@@ -61,6 +62,7 @@
 
                 <h:outputStylesheet name="css/nanoscroller.css" library="manhattan-layout" />
                 <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="manhattan-layout" />        
+            </h:form>
         </h:body>
     </f:view>
 </html>

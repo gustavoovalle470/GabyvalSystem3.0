@@ -48,7 +48,7 @@ public class LoginBean {
     public String login(){
         username = username.toUpperCase();
         try {
-            log.info("Inica el proceso de inicio de sesion para el usuario "+username);
+            log.info("Iniciando sesion para el usuario: "+username);
             if(LoginUsersController.getInstance().ValidateCredentials(username, password, (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true))){
                 UIMessageManagement.putGbMessage(18, username);
                 log.info("El inicio de sesion para el usuario "+username+" fue exitoso enviando a pagina de inicio.");

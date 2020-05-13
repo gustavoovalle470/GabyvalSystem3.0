@@ -10,8 +10,8 @@ package com.gabyval.UI.utils;
  * @author OvalleGA
  */
 public class ADNavigationActions {
-    public static final String LOGIN="/dashboard.xhtml?faces-redirect=true";
+    public static final String LOGIN="/system/dashboard.xhtml?faces-redirect=true";
     public static final String FAILED_LOGIN="/login.xhtml?faces-redirect=true";
     public static final String LOGOUT="/login.xhtml?faces-redirect=true";
-    public static final String FAILED_LOGOUT="/dashboard.xhtml?faces-redirect=true";
+    public static final String FAILED_LOGOUT="/system/dashboard.xhtml?faces-redirect=true";
 }

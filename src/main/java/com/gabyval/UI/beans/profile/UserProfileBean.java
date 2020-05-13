@@ -32,13 +32,14 @@ public class UserProfileBean implements Serializable{
     private final Logger log = Logger.getLogger(UserProfileBean.class);
     private StreamedContent photo_profile;
     private GbStaff profile_info;
+    private String photo_profileId;
     
     public UserProfileBean(){
         try {
-            log.info("Obteniendo el perfil de usuario.");
             profile_info=GBStaffController.getInstance().get_profile_info(UserSessionManager.getInstance().getUser((HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true)));
-            photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()), "image/png");
-            log.info("Perfil de usuario cargado.");
+            log.debug("Obteniendo el perfil de usuario. "+profile_info.getGbPhoto());
+            photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()));
+            log.debug("Perfil de usuario cargado.");
         } catch (GBException ex) {
             log.error("El perfil del usuario no pudo ser cargado.");
             UIMessageManagement.putException(ex);
@@ -59,6 +60,14 @@ public class UserProfileBean implements Serializable{
 
     public void setProfile_info(GbStaff profile_info) {
         this.profile_info = profile_info;
+    }
+
+    public String getPhoto_profileId() {
+        return photo_profileId;
+    }
+
+    public void setPhoto_profileId(String photo_profileId) {
+        this.photo_profileId = photo_profileId;
     }
     
     public void handleFileUpload(FileUploadEvent event) {

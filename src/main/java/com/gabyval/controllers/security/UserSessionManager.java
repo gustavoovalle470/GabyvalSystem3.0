@@ -53,41 +53,41 @@ public class UserSessionManager {
     }
     
     public void connectUser(String user, HttpSession session) throws GBPersistenceException{
-        log.info("Registrando sesion de usuario");
+        log.debug("Registrando sesion de usuario");
         GbUsers gbuser=user_service.load(user);
-        log.info("Cambiando estado de sesion de usuario");
+        log.debug("Cambiando estado de sesion de usuario");
         gbuser.setGbLoginStatus(1);
-        log.info("Cambiando fecha de ultimo inicio");
+        log.debug("Cambiando fecha de ultimo inicio");
         gbuser.setGbLastLogginDt(Calendar.getInstance().getTime());
-        log.info("Guardando cambios sobre el usuario");
+        log.debug("Guardando cambios sobre el usuario");
         user_service.save(gbuser);
-        log.info("Registrando sesion HTTP "+session.getId());
+        log.debug("Registrando sesion HTTP "+session.getId());
         users_online.put(session, user);
-        log.info("Registro finalizado con éxito.");
+        log.debug("Registro finalizado con éxito.");
     }
     
     public boolean disconectUser(HttpSession session) throws GBPersistenceException{        
-        log.info("Invalidando sesion.");
+        log.debug("Invalidando sesion.");
         GbUsers gbuser=user_service.load(users_online.get(session));
-        log.info("Cerrando sesion de usuario en base de datos.");
+        log.debug("Cerrando sesion de usuario en base de datos.");
         gbuser.setGbLoginStatus(0);
-        log.info("Guardando cambios de cambio de estado.");
+        log.debug("Guardando cambios de cambio de estado.");
         user_service.save(gbuser);
-        log.info("Removiendo sesión de usuario de la lista de usuarios conectados.");
+        log.debug("Removiendo sesión de usuario de la lista de usuarios conectados.");
         users_online.remove(session);
-        log.info("Invalidando sesion HTPP de usuario.");
+        log.debug("Invalidando sesion HTPP de usuario.");
         session.invalidate();
-        log.info("Cierre de sesion completado.");
+        log.debug("Cierre de sesion completado.");
         return true;
     }
   
     public boolean isExpirePwd(HttpSession session) throws GBPersistenceException{
         try {
-            log.info("Verificando si la contraseña de usuario aun es valida, obteniendo usuario...");
+            log.debug("Verificando si la contraseña de usuario aun es valida, obteniendo usuario...");
             GbUsers gbuser=user_service.load(users_online.get(session));
-            log.info("Validando, ultimo cambio de contraseña fue el "+gbuser.getGbLastPwdXgeDt().toString());
+            log.debug("Validando, ultimo cambio de contraseña fue el "+gbuser.getGbLastPwdXgeDt().toString());
             int days_last_change=(int) ((Calendar.getInstance().getTime().getTime()-gbuser.getGbLastPwdXgeDt().getTime())/86400000);
-            log.info("Consultando politicas de vencimiento del moduleconfiguration, vencimiento "
+            log.debug("Consultando politicas de vencimiento del moduleconfiguration, vencimiento "
                     + "cada "+ADModuleConfigurationContoller.getInstance().getIntegerConfValue(ADModuleConfigurationCons.PWD_EXPIRE_TIME)+" dias. Han pasado "+days_last_change+" dias desde el ultimo cambio. "
                     + "Se requiere cambio? "+(days_last_change>=
                       ADModuleConfigurationContoller.getInstance().getIntegerConfValue(ADModuleConfigurationCons.PWD_EXPIRE_TIME)));
@@ -100,12 +100,12 @@ public class UserSessionManager {
     }
     
     public void changePwd(HttpSession session, String newPwd) throws GBPersistenceException, NoSuchAlgorithmException, GBException{
-        log.info("Cambiando credenciales de ingreso. Obteniendo usuario.");
+        log.debug("Cambiando credenciales de ingreso. Obteniendo usuario.");
             GbUsers gbuser=user_service.load(users_online.get(session));
         if(!gbuser.getGbPassword().equals(SecurityUtils.encryptPwd(newPwd))){
-            log.info("inicia el proceso de cambio de contraseña.");
+            log.debug("inicia el proceso de cambio de contraseña.");
             user_service.save(SecurityManagerController.getInstance().changePwd(gbuser, newPwd));
-            log.info("La contraseña se cambio exitosamente.");
+            log.debug("La contraseña se cambio exitosamente.");
             UIMessageManagement.putCustomMessage(FacesMessage.SEVERITY_INFO, "Exito", "La contraseña se cambio exitosamente.");
         }else{
             throw new GBException("La contraseña no puede ser igual a la que ya tiene asignada");

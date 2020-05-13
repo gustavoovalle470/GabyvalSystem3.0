@@ -34,7 +34,7 @@ public class SecurityManagerController {
     private GBPwdHistoryService pwd_his_service;
     
     public SecurityManagerController(){
-        log.info("Creando instancia del controlador SecurityManagerController");
+        log.debug("Creando instancia del controlador SecurityManagerController");
         instance=this;
     }
     
@@ -46,14 +46,14 @@ public class SecurityManagerController {
     }
     
     public GbUsers changePwd(GbUsers user, String newPwd) throws GBPersistenceException, GBException, NoSuchAlgorithmException{
-        log.info("Validando politicas de seguridad para la nueva contraseña.");
+        log.debug("Validando politicas de seguridad para la nueva contraseña.");
         if(!isPwdUsed(user.getGbUsername(), newPwd) && isAccomplishSecPol(newPwd)){
-            log.info("La nueva contraseña cumple con las politicas de seguridad configuradas. Guardando la contraseña utilizada previamente.");
+            log.debug("La nueva contraseña cumple con las politicas de seguridad configuradas. Guardando la contraseña utilizada previamente.");
             saveOldPwd(user.getGbPassword(), user);
-            log.info("Cifrando y aplicando cambios a las credenciales de usuario.");
+            log.debug("Cifrando y aplicando cambios a las credenciales de usuario.");
             user.setGbPassword(SecurityUtils.encryptPwd(newPwd));
             user.setGbLastPwdXgeDt(Calendar.getInstance().getTime());
-            log.info("Cambios sobre las credenciales de usuario fueron aplicados exitosamente.");
+            log.debug("Cambios sobre las credenciales de usuario fueron aplicados exitosamente.");
         }else{
             log.error("La contraseña no cumple con las politicas de seguridad.");
             throw new GBException("La contraseña no cumple con las politicas de seguridad.");
@@ -62,10 +62,10 @@ public class SecurityManagerController {
     }
     
     public void saveOldPwd(String gbPassword, GbUsers gbUsers) throws GBPersistenceException, GBException {
-        log.info("Salvando la contraseña anterior:");
+        log.debug("Salvando la contraseña anterior:");
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("gbUsername", gbUsers.getGbUsername());
-        log.info("Buscando la cantidad de contraseñas salvadas.");
+        log.debug("Buscando la cantidad de contraseñas salvadas.");
         if(pwd_his_service.runSQL(GBSentencesRBOs.GBPWDHISTORY_FINDBYGBUSERNAME, parameters).size()>
            ADModuleConfigurationContoller.getInstance().getIntegerConfValue(ADModuleConfigurationCons.PWD_CANT_SAVE)){
             log.info("Se ha llegado al limite de contraseñas guardadas, obteniendo la primera entrada guardada para eliminarla");
@@ -75,16 +75,16 @@ public class SecurityManagerController {
             GbPwdHistory pwd_hist = (GbPwdHistory) pwd_his_service.runSQL(GBSentencesRBOs.GBPWDHISTORY_FINDFIRSTENTRY, parameters).get(0);
             pwd_his_service.delete(pwd_hist);
         }
-        log.info("Creando una nueva entrada de historial de cotnraseñas.");
+        log.debug("Creando una nueva entrada de historial de cotnraseñas.");
         GbPwdHistory pwd_hist = new GbPwdHistory();
         pwd_hist.setGbUsers(gbUsers);
         pwd_hist.setGbPwdHistoryPK(new GbPwdHistoryPK(gbUsers.getGbUsername(), gbPassword));
         pwd_hist.setCreateDt(Calendar.getInstance().getTime());
         pwd_hist.setGbPwdInsDt(Calendar.getInstance().getTime());
         pwd_hist.setRowversion(0);
-        log.info("Salvando entrada de historial de contraseñas.");
+        log.debug("Salvando entrada de historial de contraseñas.");
         pwd_his_service.save(pwd_hist);
-        log.info("Finaliza el salvado del historial de contraseñas.");
+        log.debug("Finaliza el salvado del historial de contraseñas.");
     }
     
     public boolean isPwdUsed(String user, String newPwd) throws GBPersistenceException, NoSuchAlgorithmException{

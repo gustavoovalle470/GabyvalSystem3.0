@@ -65,7 +65,7 @@ public class SecurityMenuController {
     }
     
     public List<Object> getMenuSec(String username) throws GBException{
-        log.info("Ejecutando sentencia.");
+        log.debug("Ejecutando sentencia.");
         List menus = new ArrayList();
        try {
             HashMap<String, Object> parameters= new HashMap<>();
@@ -73,7 +73,7 @@ public class SecurityMenuController {
             HashMap<String, Object> parameters2= new HashMap<>();
             for (Object o :sec_prof_service.runSQL(GBSentencesRBOs.GBUSERPROFILING_FINDBYGBUSERNAME, parameters)){
                 GbUserProfiling prof = (GbUserProfiling) o;
-                log.info("Obteniendo menus para el perfil "+prof.getGbUserProfilingPK().getGbProfile()+" que ha sido asignado al usuario "+username);
+                log.debug("Obteniendo menus para el perfil "+prof.getGbUserProfilingPK().getGbProfile()+" que ha sido asignado al usuario "+username);
                 parameters2.put("gbProfile", prof.getGbUserProfilingPK().getGbProfile());
                 menus.addAll(profiling_service.runSQL(GBSentencesRBOs.GBMENUPROFILING_FINDBYGBPROFILE, parameters2));
                 parameters2.remove("gbProfile", prof.getGbUserProfilingPK().getGbProfile());
