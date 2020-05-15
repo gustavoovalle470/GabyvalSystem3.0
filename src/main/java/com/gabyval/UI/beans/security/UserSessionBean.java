@@ -16,6 +16,7 @@ import com.gabyval.UI.utils.ADNavigationActions;
 import com.gabyval.UI.utils.UIMessageManagement;
 import com.gabyval.controllers.security.UserSessionManager;
 import com.gabyval.persistence.exception.GBPersistenceException;
+import com.gabyval.referencesbo.security.users.GbUsers;
 import java.security.NoSuchAlgorithmException;
 import javax.faces.application.FacesMessage;
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ import org.primefaces.model.menu.DefaultMenuModel;
 @ManagedBean(name = "UserSessionBean")
 public class UserSessionBean implements Serializable{
     private final Logger log = Logger.getLogger(UserSessionBean.class);
-    private String username;
+    private GbUsers user;
     private final HttpSession session;
     private DefaultMenuModel user_sec_menu;
     private String pwd;
@@ -39,11 +40,11 @@ public class UserSessionBean implements Serializable{
         log.debug("Obteniendo datos de sesion.");
         session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         log.debug("Obteniendo usuario conectado.");
-        username = UserSessionManager.getInstance().getUser(session);
+        user = UserSessionManager.getInstance().getUser(session);
         log.debug("Recuperando esquema de seguridad.");
         try {
-            user_sec_menu = MenuFactory.getInstance().getSecMenuUser(username);
-        } catch (GBException ex) {
+            user_sec_menu = MenuFactory.getInstance().getSecMenuUser(user.getGbUsername());
+        } catch (GBException | GBPersistenceException ex) {
             log.error(ex);
         }
     }
@@ -59,11 +60,11 @@ public class UserSessionBean implements Serializable{
     }
     
     public String getUsername() {
-        return username;
+        return user.getGbUsername();
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.user.setGbUsername(username);
     }
     
     public boolean isValidHttpSession(){
@@ -96,9 +97,9 @@ public class UserSessionBean implements Serializable{
     
     public String logout(){
         try {
-            log.debug("Cerrando sesion del usuario: "+username);
+            log.debug("Cerrando sesion del usuario: "+user.getGbUsername());
             if (UserSessionManager.getInstance().disconectUser(session)) {
-                UIMessageManagement.putInfoMessage("La sesion del usuario "+username+" finalizó correctamente.");
+                UIMessageManagement.putInfoMessage("La sesion del usuario "+user.getGbUsername()+" finalizó correctamente.");
                 log.debug("Cierre de sesion finalizado redirigiendo a paginal principal.");
                 return ADNavigationActions.LOGOUT;
             } else {
@@ -114,7 +115,7 @@ public class UserSessionBean implements Serializable{
     
     public String changePassword(){
         try {
-            log.debug("Cambiando la contraseña para el usuario "+username);
+            log.debug("Cambiando la contraseña para el usuario "+user.getGbUsername());
             log.debug("Pasword ingresada: "+pwd+" confirmacion: "+repwd);
             if(pwd != null && repwd != null && pwd.equals(repwd)){
                 UserSessionManager.getInstance().changePwd(session, repwd);

@@ -11,7 +11,7 @@ import com.gabyval.referencesbo.GBSentencesRBOs;
 import com.gabyval.referencesbo.security.users.GbStaff;
 import com.gabyval.services.security.users.GBStaffService;
 import java.util.HashMap;
-import java.util.logging.Level;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,7 +42,11 @@ public class GBStaffController {
         try {
             HashMap<String, Object> parameters=new HashMap<>();
             parameters.put("gbUsername", username);
-            return (GbStaff) staff_service.runSQL(GBSentencesRBOs.GBSTAFF_FINDBYGBUSERNAME, parameters).get(0);
+            List<Object> gbStaffs=staff_service.runSQL(GBSentencesRBOs.GBSTAFF_FINDBYGBUSERNAME, parameters);
+            if(gbStaffs == null || gbStaffs.isEmpty()){
+                return null;
+            }
+            return (GbStaff) gbStaffs.get(0);
         } catch (GBPersistenceException ex) {
             log.error(ex);
             throw new GBException("No se pudo carga la informacion del perfil");
@@ -54,6 +58,7 @@ public class GBStaffController {
             staff_service.save(profile);
             staff_service.refresh(profile);
         } catch (GBPersistenceException ex) {
+            log.fatal(ex);
             throw new GBException("No se pudo salvar el perfil");
         }
     }

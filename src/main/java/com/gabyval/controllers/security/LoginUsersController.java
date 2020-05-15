@@ -62,12 +62,12 @@ public class LoginUsersController {
             log.error("Las credenciales proporcionadas no son validas.");
             throw new GBException(13, null);
         }
-        if(gbuser.getGbLoginStatus() == 1){
+        if(gbuser.getLoginStatus().getCatalogItemId() == 1){
             log.error("El usuario "+user+" se encuentra conectado.");
             throw new GBException(11, user);
         }
-        if(gbuser.getGbOprativeStatus() != 1){
-            log.error("El usuario "+user+" no tiene un estado operativo valido.");
+        if(gbuser.getOperativeStatus().getCatalogItemId() != 1){
+            log.error("El usuario "+user+" "+gbuser.getOperativeStatus().getCatalogDescription());
             throw new GBException(12, user);
         }
         log.debug("Las credenciales proporcionadas fueron validadas con exito.");

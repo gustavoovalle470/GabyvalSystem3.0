@@ -77,7 +77,6 @@ public class SecurityManagerController {
         }
         log.debug("Creando una nueva entrada de historial de cotnraseñas.");
         GbPwdHistory pwd_hist = new GbPwdHistory();
-        pwd_hist.setGbUsers(gbUsers);
         pwd_hist.setGbPwdHistoryPK(new GbPwdHistoryPK(gbUsers.getGbUsername(), gbPassword));
         pwd_hist.setCreateDt(Calendar.getInstance().getTime());
         pwd_hist.setGbPwdInsDt(Calendar.getInstance().getTime());

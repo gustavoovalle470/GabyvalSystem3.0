@@ -8,9 +8,11 @@ package com.gabyval.controllers.security;
 import com.gabyval.Exceptions.GBException;
 import com.gabyval.UI.utils.ADModuleConfigurationCons;
 import com.gabyval.UI.utils.UIMessageManagement;
+import com.gabyval.controllers.system.ADCatalogController;
 import com.gabyval.controllers.system.ADModuleConfigurationContoller;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.security.users.GbUsers;
+import com.gabyval.referencesbo.system.AdCatalogs;
 import com.gabyval.services.security.users.GBUserService;
 import com.gabyval.services.security.utils.SecurityUtils;
 import java.security.NoSuchAlgorithmException;
@@ -32,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserSessionManager {
     private final Logger log = Logger.getLogger(UserSessionManager.class);
     private static UserSessionManager instance;
-    private final HashMap<HttpSession, String> users_online;
+    private final HashMap<HttpSession, GbUsers> users_online;
     @Autowired
     private GBUserService user_service;
     
@@ -56,21 +58,21 @@ public class UserSessionManager {
         log.debug("Registrando sesion de usuario");
         GbUsers gbuser=user_service.load(user);
         log.debug("Cambiando estado de sesion de usuario");
-        gbuser.setGbLoginStatus(1);
+        gbuser.setLoginStatus(ADCatalogController.getInstance().getCatalog(1, "LOGIN_STATUS"));
         log.debug("Cambiando fecha de ultimo inicio");
         gbuser.setGbLastLogginDt(Calendar.getInstance().getTime());
         log.debug("Guardando cambios sobre el usuario");
         user_service.save(gbuser);
         log.debug("Registrando sesion HTTP "+session.getId());
-        users_online.put(session, user);
+        users_online.put(session, gbuser);
         log.debug("Registro finalizado con éxito.");
     }
     
     public boolean disconectUser(HttpSession session) throws GBPersistenceException{        
         log.debug("Invalidando sesion.");
-        GbUsers gbuser=user_service.load(users_online.get(session));
+        GbUsers gbuser=user_service.load(users_online.get(session).getGbUsername());
         log.debug("Cerrando sesion de usuario en base de datos.");
-        gbuser.setGbLoginStatus(0);
+        gbuser.setLoginStatus(ADCatalogController.getInstance().getCatalog(0, "LOGIN_STATUS"));
         log.debug("Guardando cambios de cambio de estado.");
         user_service.save(gbuser);
         log.debug("Removiendo sesión de usuario de la lista de usuarios conectados.");
@@ -84,7 +86,7 @@ public class UserSessionManager {
     public boolean isExpirePwd(HttpSession session) throws GBPersistenceException{
         try {
             log.debug("Verificando si la contraseña de usuario aun es valida, obteniendo usuario...");
-            GbUsers gbuser=user_service.load(users_online.get(session));
+            GbUsers gbuser=user_service.load(users_online.get(session).getGbUsername());
             log.debug("Validando, ultimo cambio de contraseña fue el "+gbuser.getGbLastPwdXgeDt().toString());
             int days_last_change=(int) ((Calendar.getInstance().getTime().getTime()-gbuser.getGbLastPwdXgeDt().getTime())/86400000);
             log.debug("Consultando politicas de vencimiento del moduleconfiguration, vencimiento "
@@ -101,7 +103,7 @@ public class UserSessionManager {
     
     public void changePwd(HttpSession session, String newPwd) throws GBPersistenceException, NoSuchAlgorithmException, GBException{
         log.debug("Cambiando credenciales de ingreso. Obteniendo usuario.");
-            GbUsers gbuser=user_service.load(users_online.get(session));
+            GbUsers gbuser=user_service.load(users_online.get(session).getGbUsername());
         if(!gbuser.getGbPassword().equals(SecurityUtils.encryptPwd(newPwd))){
             log.debug("inicia el proceso de cambio de contraseña.");
             user_service.save(SecurityManagerController.getInstance().changePwd(gbuser, newPwd));
@@ -112,7 +114,7 @@ public class UserSessionManager {
         }
     }
     
-    public String getUser(HttpSession session){
+    public GbUsers getUser(HttpSession session){
         return users_online.get(session);
     }   
 }

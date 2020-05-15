@@ -28,11 +28,17 @@
                         <p:outputLabel value="Apellido:"/>
                         <p:inputText value="#{ProfileBean.profile_info.gbStaffSurname}"/>
                         <p:outputLabel value="Tipo documento:"/>
-                        <p:inputText value="TIPO DOCUMENTO ES LISTA"/>
+                        <p:selectOneMenu value="#{ProfileBean.idTypeId}">
+                            <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true"></f:selectItem>
+                            <f:selectItems value="#{ProfileBean.idType}"></f:selectItems>
+                        </p:selectOneMenu>
                         <p:outputLabel value="Documento:"/>
                         <p:inputText value="#{ProfileBean.profile_info.gbIdNumber}"/>
                         <p:outputLabel value="Genero:"/>
-                        <p:inputText value="GENERO ES UNA LISTA"/>
+                        <p:selectOneMenu value="#{ProfileBean.genderId}">
+                            <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true"></f:selectItem>
+                            <f:selectItems value="#{ProfileBean.gender}"></f:selectItems>
+                        </p:selectOneMenu>
                         <p:outputLabel value="Fecha nacimiento:"/>
                         <p:calendar value="#{ProfileBean.profile_info.gbBirthdate}" pattern="yyyy-MM-dd" mask="true"/>
                         <p:outputLabel value="Telefono:"/>
