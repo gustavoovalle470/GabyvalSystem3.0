@@ -12,7 +12,6 @@ import com.gabyval.controllers.system.ADCatalogController;
 import com.gabyval.controllers.system.ADModuleConfigurationContoller;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.security.users.GbUsers;
-import com.gabyval.referencesbo.system.AdCatalogs;
 import com.gabyval.services.security.users.GBUserService;
 import com.gabyval.services.security.utils.SecurityUtils;
 import java.security.NoSuchAlgorithmException;
@@ -56,13 +55,13 @@ public class UserSessionManager {
     
     public void connectUser(String user, HttpSession session) throws GBPersistenceException{
         log.debug("Registrando sesion de usuario");
-        GbUsers gbuser=user_service.load(user);
+        GbUsers gbuser=(GbUsers)user_service.load(user);
         log.debug("Cambiando estado de sesion de usuario");
         gbuser.setLoginStatus(ADCatalogController.getInstance().getCatalog(1, "LOGIN_STATUS"));
         log.debug("Cambiando fecha de ultimo inicio");
         gbuser.setGbLastLogginDt(Calendar.getInstance().getTime());
         log.debug("Guardando cambios sobre el usuario");
-        user_service.save(gbuser);
+        user_service.update(gbuser);
         log.debug("Registrando sesion HTTP "+session.getId());
         users_online.put(session, gbuser);
         log.debug("Registro finalizado con éxito.");
@@ -70,11 +69,11 @@ public class UserSessionManager {
     
     public boolean disconectUser(HttpSession session) throws GBPersistenceException{        
         log.debug("Invalidando sesion.");
-        GbUsers gbuser=user_service.load(users_online.get(session).getGbUsername());
+        GbUsers gbuser=(GbUsers)user_service.load(users_online.get(session).getGbUsername());
         log.debug("Cerrando sesion de usuario en base de datos.");
         gbuser.setLoginStatus(ADCatalogController.getInstance().getCatalog(0, "LOGIN_STATUS"));
         log.debug("Guardando cambios de cambio de estado.");
-        user_service.save(gbuser);
+        user_service.update(gbuser);
         log.debug("Removiendo sesión de usuario de la lista de usuarios conectados.");
         users_online.remove(session);
         log.debug("Invalidando sesion HTPP de usuario.");
@@ -86,7 +85,7 @@ public class UserSessionManager {
     public boolean isExpirePwd(HttpSession session) throws GBPersistenceException{
         try {
             log.debug("Verificando si la contraseña de usuario aun es valida, obteniendo usuario...");
-            GbUsers gbuser=user_service.load(users_online.get(session).getGbUsername());
+            GbUsers gbuser=(GbUsers)user_service.load(users_online.get(session).getGbUsername());
             log.debug("Validando, ultimo cambio de contraseña fue el "+gbuser.getGbLastPwdXgeDt().toString());
             int days_last_change=(int) ((Calendar.getInstance().getTime().getTime()-gbuser.getGbLastPwdXgeDt().getTime())/86400000);
             log.debug("Consultando politicas de vencimiento del moduleconfiguration, vencimiento "
@@ -103,10 +102,10 @@ public class UserSessionManager {
     
     public void changePwd(HttpSession session, String newPwd) throws GBPersistenceException, NoSuchAlgorithmException, GBException{
         log.debug("Cambiando credenciales de ingreso. Obteniendo usuario.");
-            GbUsers gbuser=user_service.load(users_online.get(session).getGbUsername());
+            GbUsers gbuser=(GbUsers)user_service.load(users_online.get(session).getGbUsername());
         if(!gbuser.getGbPassword().equals(SecurityUtils.encryptPwd(newPwd))){
             log.debug("inicia el proceso de cambio de contraseña.");
-            user_service.save(SecurityManagerController.getInstance().changePwd(gbuser, newPwd));
+            user_service.update(SecurityManagerController.getInstance().changePwd(gbuser, newPwd));
             log.debug("La contraseña se cambio exitosamente.");
             UIMessageManagement.putCustomMessage(FacesMessage.SEVERITY_INFO, "Exito", "La contraseña se cambio exitosamente.");
         }else{

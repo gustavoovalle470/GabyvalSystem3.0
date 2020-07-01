@@ -1,0 +1,63 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    <h:form id="GBAddUser">
+        <p:growl id="GrowlAddUser" showDetail="true">
+            <p:autoUpdate/>
+        </p:growl>
+        <p:dialog header="Agregar un nuevo usuario" 
+                  widgetVar="AddUserDlg" 
+                  resizable="true" 
+                  modal="true" 
+                  closable="true">
+            <h:panelGrid columns="2" cellpadding="10">
+                <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                    <p:panelGrid columns="1" styleClass="ui-panelgrid-blank">
+                        <p:graphicImage value="#{ProfileBean.photo_profile}" width="100" height="100" cache="false"/>
+                        <p:fileUpload id="GBPhotoProfile2" fileUploadListener="#{ProfileBean.handleFileUpload}" mode="advanced" auto="true"
+                                      update="GrowlAddUser" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" >
+                            <p:autoUpdate/>
+                        </p:fileUpload>
+                    </p:panelGrid>
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Nombre:"/>
+                        <p:inputText value="#{UsersBean.newStaff.gbStaffName}"/>
+                        <p:outputLabel value="Apellido:"/>
+                        <p:inputText value="#{UsersBean.newStaff.gbStaffSurname}"/>
+                        <p:outputLabel value="Tipo documento:"/>
+                        <p:selectOneMenu value="#{UsersBean.idTypeId}">
+                            <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true"></f:selectItem>
+                            <f:selectItems value="#{UsersBean.idType}"></f:selectItems>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Documento:"/>
+                        <p:inputText value="#{UsersBean.newStaff.gbIdNumber}"/>
+                        <p:outputLabel value="Genero:"/>
+                        <p:selectOneMenu value="#{UsersBean.genderId}">
+                            <f:selectItem itemLabel="Seleccione" itemValue="0" noSelectionOption="true"></f:selectItem>
+                            <f:selectItems value="#{UsersBean.gender}"></f:selectItems>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Fecha nacimiento:"/>
+                        <p:calendar value="#{UsersBean.newStaff.gbBirthdate}" pattern="yyyy-MM-dd" mask="true"/>
+                        <p:outputLabel value="Telefono:"/>
+                        <p:inputText value="#{UsersBean.newStaff.gbPhoneNumber}"/>
+                        <p:outputLabel value="Movil:"/>
+                        <p:inputText value="#{UsersBean.newStaff.gbMobileNumber}"/>
+                        <p:outputLabel value="Correo:"/>
+                        <p:inputText value="#{UsersBean.newStaff.gbEmail}"/>
+                        <p:outputLabel value="Nombre de usuario"/>
+                        <p:outputLabel id="GbUsername" value="#{UsersBean.newUser.gbUsername}"/>
+                    </p:panelGrid>
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <div align="right">
+                        <p:commandButton value="Crear usuario" action="#{UsersBean.createUser()}" update="GbUsername"/>
+                    </div>
+                </f:facet>  
+            </h:panelGrid>
+        </p:dialog>    
+    </h:form>
+
+</ui:composition>

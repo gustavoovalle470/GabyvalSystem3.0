@@ -39,7 +39,7 @@ public class ADModuleConfigurationContoller {
     }
     
     public AdModuleConfiguration getConfiguration(int configuration_id) throws GBPersistenceException{
-        return module_service.load(configuration_id);
+        return (AdModuleConfiguration)module_service.load(configuration_id);
     }
     
     public AdModuleConfiguration getConfiguration(String configuration_name) throws GBPersistenceException, GBException{

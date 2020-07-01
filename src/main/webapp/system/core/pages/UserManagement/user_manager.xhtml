@@ -66,6 +66,10 @@
                         <p:column style="width:35px">
                             <p:rowEditor />
                         </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="Agregar usuario" styleClass="green-btn raised-btn" 
+                                             icon="fa fa-fw fa-plus" onclick="PF('AddUserDlg').show();"/>
+                        </f:facet>
                     </p:dataTable>
                 </div>
             </h:form>

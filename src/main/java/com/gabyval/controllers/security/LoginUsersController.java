@@ -53,7 +53,8 @@ public class LoginUsersController {
 
     private boolean isInvalidCrendetial(String user, String password) throws GBException, GBPersistenceException{
         log.debug("Obteniendo usuario de la base de datos: "+user);
-        GbUsers gbuser=user_service.load(user);
+        GbUsers gbuser=(GbUsers)user_service.load(user);
+        log.debug("Se obtuvo el usuario: "+gbuser.getGbUsername());
         if(gbuser == null){
             log.error("El usuario "+user+" no pudo ser encontrado en la base de datos.");
             throw new GBException(10, user);

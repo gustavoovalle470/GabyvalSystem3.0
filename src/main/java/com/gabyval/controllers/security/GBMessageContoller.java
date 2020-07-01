@@ -34,7 +34,7 @@ public class GBMessageContoller {
     }
     
     public AdMessages getMessage(int error_id, String replace_values) throws GBPersistenceException{
-        AdMessages message= msg_service.load(error_id);
+        AdMessages message= (AdMessages)msg_service.load(error_id);
         if(replace_values != null){
             String msg_desc = message.getMessageDesc();
             String[] values = replace_values.split(UIConstants.MESSAGE_DATA_SEPARATOR);

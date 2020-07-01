@@ -61,4 +61,20 @@ public class GBUserController {
         }
         return user;
     }
+
+    public String getNewUserName(String gbStaffName, String gbStaffSurname) throws GBPersistenceException {
+        int userIterator=1;
+        String username,aux;
+        String[] dataSurname=gbStaffSurname.split(" ");
+        String[] dataName=gbStaffName.split(" ");
+        username=dataSurname[0]+dataName[0].toCharArray()[0]+
+                (dataName.length>1?dataName[1].toCharArray()[0]:"");
+        aux=username;
+        while(userService.load(username)!=null){
+            username=aux;
+            username=username+""+userIterator;
+            userIterator++;
+        }
+        return username.toUpperCase();
+    }
 }

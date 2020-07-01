@@ -264,11 +264,7 @@ public class UserProfileBean{
      * Crea un perfil de usuario.
      */
     private void setDefaulProfile() {
-        log.debug("GabyvalSystem - Creando un nuevo perfil de usuario.");
-        profile_info=new GbStaff();
-        log.debug("GabyvalSystem - Asociando perfil al nombre usuario.");
-        profile_info.setGbUsername(user.getGbUsername());
-        log.debug("GabyvalSystem - Asociando perfil al usuario.");
+        log.debug("GabyvalSystem - Creando un nuevo perfil de usuario. Asociando perfil al usuario.");
         profile_info.setGbUsers(user);
         log.debug("GabyvalSystem - Asociando fecha de creacion a dia de hoy.");
         profile_info.setCreateDt(Calendar.getInstance().getTime());

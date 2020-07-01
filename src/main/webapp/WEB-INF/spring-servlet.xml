@@ -28,10 +28,10 @@
     <!-- DataSource -->
     <bean class="org.springframework.jdbc.datasource.DriverManagerDataSource"
         id="dataSource">
-        <property name="driverClassName" value="${database.driver}"></property>
-        <property name="url" value="${database.url}"></property>
-        <property name="username" value="${database.user}"></property>
-        <property name="password" value="${database.password}"></property>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/db_gabyval?zeroDateTimeBehavior=convertToNull"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="Tata1027."></property>
     </bean>
  
     <!-- Hibernate SessionFactory -->
