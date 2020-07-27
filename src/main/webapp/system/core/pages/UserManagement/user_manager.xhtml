@@ -51,7 +51,7 @@
                                     <p:outputLabel value="#{user.getDaysPassedLastXgePwd()>=UsersBean.daysToExpire?'Se requiere cambiar':'No se requiere cambiar'}"/>
                                 </f:facet>
                                 <f:facet name="input">
-                                    <p:selectBooleanCheckbox id="GBExpirePwd" value="#{UsersBean.expirePwd}" itemLabel="#{user.getDaysPassedLastXgePwd()>=UsersBean.daysToExpire?'Cambiar la contraseña':'No cambiar la contraseña'}">
+                                    <p:selectBooleanCheckbox id="GBExpirePwd" value="#{UsersBean.expirePwd}" itemLabel="#{UsersBean.expirePwd?'Cambiar la contraseña':(user.getDaysPassedLastXgePwd()>=UsersBean.daysToExpire?'Contraseña vencida':'No cambiar la contraseña')}">
                                          <p:ajax update="GBExpirePwd"/>
                                     </p:selectBooleanCheckbox>
                                 </f:facet>

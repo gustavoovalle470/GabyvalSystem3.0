@@ -5,11 +5,10 @@ import com.gabyval.controllers.security.SecurityMenuController;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.security.menu.GbMenulinks;
 import com.gabyval.referencesbo.security.profiling.GbMenuProfiling;
+import java.util.HashMap;
+import java.util.List;
 import org.apache.log4j.Logger;
-import org.primefaces.model.menu.DefaultMenuItem;
-import org.primefaces.model.menu.DefaultMenuModel;
-import org.primefaces.model.menu.DefaultSubMenu;
-import org.primefaces.model.menu.MenuElement;
+import org.primefaces.model. menu.DefaultMenuModel;
 
 /**
  *
@@ -29,35 +28,38 @@ public class MenuFactory {
     public DefaultMenuModel getSecMenuUser(String username) throws GBException, GBPersistenceException{
         log.debug("Obteniendo el arbol de seguridad para el usuario "+username);
         DefaultMenuModel user_menu = new DefaultMenuModel();
-        for(Object menu_prof: SecurityMenuController.getInstance().getMenuSec(username)){
-            GbMenulinks menu=((GbMenuProfiling)menu_prof).getGbMenulinks();
-            if(menu.getGbMenuStatus()==1){
-                if(menu.getGbMenuParId()!=null){
-                    user_menu.addElement(createSub(menu.getGbMenuParId(), createItem(menu)));
-                }else{
-                    user_menu.addElement(createItem(menu));
-                }
-            }
+        HashMap<Integer, GBTemporalMenuOrder> menusToPut=getMenu(SecurityMenuController.getInstance().getMenuSec(username));
+        for(Integer id:menusToPut.keySet()){
+            user_menu.addElement(menusToPut.get(id).buildMenuElement());
         }
         return user_menu;
     }
-
-    private DefaultSubMenu createSub(GbMenulinks gbMenuParId, MenuElement menu) {
-        DefaultSubMenu item = new DefaultSubMenu(gbMenuParId.getGbMenuName());
-        item.setId(""+gbMenuParId.getGbMenuId());
-        item.setIcon(gbMenuParId.getGbIcon());
-        item.addElement(menu);
-        if(gbMenuParId.getGbMenuParId()!=null){
-            return createSub(gbMenuParId.getGbMenuParId(), item);
-        }
-        return item;
-    }
     
-    private DefaultMenuItem createItem(GbMenulinks gbMenulinks) {
-        DefaultMenuItem item = new DefaultMenuItem(gbMenulinks.getGbMenuName());
-        item.setId(""+gbMenulinks.getGbMenuId());
-        item.setIcon(gbMenulinks.getGbIcon());
-        item.setCommand(gbMenulinks.getGbPageView());
-        return item;
+    private HashMap<Integer, GBTemporalMenuOrder> getMenu(List<Object> menu_profiling){
+        HashMap<Integer, GBTemporalMenuOrder> menus=new HashMap<>();
+        for(Object object: menu_profiling){
+            GBTemporalMenuOrder menuPrincipal;
+            if(((GbMenuProfiling)object).getGbMenulinks().getGbMenuParId() != null){
+                GbMenulinks par=((GbMenuProfiling)object).getGbMenulinks().getGbMenuParId();
+                menuPrincipal=new GBTemporalMenuOrder(par);
+                menuPrincipal.addItem(((GbMenuProfiling)object).getGbMenulinks().getGbMenuId(), 
+                                     new GBTemporalMenuOrder(((GbMenuProfiling)object).getGbMenulinks()));
+                par=par.getGbMenuParId();
+                while(par!=null){
+                    GBTemporalMenuOrder aux=menuPrincipal;
+                    menuPrincipal=new GBTemporalMenuOrder(par);
+                    menuPrincipal.addItem(aux.getMenuId(), aux);
+                    par=par.getGbMenuParId();
+                }
+            }else{
+                menuPrincipal=new GBTemporalMenuOrder(((GbMenuProfiling)object).getGbMenulinks());
+            }
+            if(!menus.containsKey(menuPrincipal.getMenuId())){
+                menus.put(menuPrincipal.getMenuId(), menuPrincipal);
+            }else{
+                menus.get(menuPrincipal.getMenuId()).addItems(menuPrincipal.getSubMenus());
+            }
+        }
+        return menus;
     }
 }

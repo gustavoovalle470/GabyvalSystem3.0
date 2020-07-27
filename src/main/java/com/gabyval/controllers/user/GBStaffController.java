@@ -69,11 +69,9 @@ public class GBStaffController {
 
     public boolean existProfile(GbStaff newStaff) throws GBPersistenceException {
         HashMap<String, Object>params=new HashMap<>();
-        log.debug("DATOS DE LA SENTENCIA: "+newStaff.getGbIdNumber()+", "+newStaff.getGbUsername()+", "+newStaff.getGbStaffName()+", "+newStaff.getGbStaffSurname());
         params.put("gbIdNumber", newStaff.getGbIdNumber());
         params.put("gbStaffName", newStaff.getGbStaffName());
         params.put("gbStaffSurname", newStaff.getGbStaffSurname());
-        log.debug("Se encontraron "+staff_service.runSQL(GBSentencesRBOs.GBSTAFF_FINDBYPERSONALDATA, params).size()+" perfiles con el mismo nombre.");
         return !staff_service.runSQL(GBSentencesRBOs.GBSTAFF_FINDBYPERSONALDATA, params).isEmpty();
     }
 }

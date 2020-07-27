@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
@@ -12,7 +11,8 @@
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
             <meta name="apple-mobile-web-app-capable" content="yes" />
         </f:facet>
-        <title>PrimeFaces Manhattan - Error</title>
+        <link rel="icon" href="/resources/manhattan-layout/images/FavIcon.png" type="image/x-icon"/>
+        <title>#{SystemInfoBean.header_view}</title>
     </h:head>
 
     <h:body styleClass="exception-body error">
@@ -31,16 +31,16 @@
         </div>
         <div class="exception-panel">
             <div class="exception-panel-content error">
-                <h1>ERROR</h1>
-                <span class="secondary">OCCURED</span>
+                <h1>OCURRIO</h1>
+                <span class="secondary">UN ERROR</span>
                 <div class="information-text">
-                    <span><strong>An error occured, please try again later.</strong></span>
-                    <p>Better get back home and forget about that</p>
+                    <span><strong>Un error ha ocurrido, y no se pudo recuperar la vista.</strong></span>
+                    <p>Lo mejor es volver a una pagina segura. Si el problema persiste contacte con su administrador.</p>
                 </div>
             </div>
             
             <div class="exception-panel-footer">
-                <p:button value="Go To Dashboard" outcome="/dashboard" />
+                <p:button value="Volver al inicio" outcome="/login.xhtml?faces-redirect=true" />
             </div>
         </div>
     

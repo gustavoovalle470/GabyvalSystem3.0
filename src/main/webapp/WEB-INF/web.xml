@@ -107,5 +107,7 @@
     <error-page>
         <error-code>404</error-code>
         <location>/system/core/error_pages/404.xhtml</location>
+        <error-code>500</error-code>
+        <location>/system/core/error_pages/error.xhtml</location>
     </error-page>
 </web-app>
