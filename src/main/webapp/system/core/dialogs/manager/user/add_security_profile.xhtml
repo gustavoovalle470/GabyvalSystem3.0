@@ -1,0 +1,38 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+    <h:form id="GBAddSecurityProfile">
+        <p:growl id="GrowlAddUser" showDetail="true">
+            <p:autoUpdate/>
+        </p:growl>
+        <p:dialog header="Agregar un nuevo perfil de seguridad" 
+                  widgetVar="AddSecProfileDlg" 
+                  resizable="true" 
+                  modal="true" 
+                  closable="true">
+            <h:panelGrid columns="2" cellpadding="10">
+                <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                    <p:panelGrid columns="2" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel value="Nombre:"/>
+                        <p:inputText value="#{SecurityProfilesBean.newProfile.gbProfile}"/>
+                        <p:outputLabel value="Descripcion"/>
+                        <p:inputText value="#{SecurityProfilesBean.newProfile.gbProfileDesc}"/>
+                        <p:outputLabel value="Estado:"/>
+                        <p:selectBooleanCheckbox id="GBNewProfileStatus" value="#{SecurityProfilesBean.isProfileActive}" itemLabel="#{SecurityProfilesBean.isProfileActive?'Perfil activo':'Perfil inactivo'}">
+                            <p:ajax update="GBNewProfileStatus"/>
+                        </p:selectBooleanCheckbox>
+                    </p:panelGrid>
+                </p:panelGrid>
+                <f:facet name="footer">
+                    <div align="right">
+                        <p:commandButton value="Crear perfil" action="#{SecurityProfilesBean.createSecurityProfile()}" onclick="PF('AddSecProfileDlg').hide();"/>
+                    </div>
+                </f:facet>  
+            </h:panelGrid>
+        </p:dialog>    
+    </h:form>
+
+</ui:composition>

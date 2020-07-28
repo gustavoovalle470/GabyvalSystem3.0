@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="card" style="width: 100%; height: 500px;">
+            <h:form id="GBUserProfileManagerForm">
+                <div align="center">
+                    <p:dataTable id="GBProfiles" var="profiles" value="#{SecurityProfilesBean.profiles}" editable="true" 
+                                 rows="10" paginator="true">
+                        <f:facet name="header">
+                            Perfiles de seguridad
+                        </f:facet>
+                        <p:ajax update="GBProfiles" event="rowEdit" listener="#{SecurityProfilesBean.updateProfile}"/>
+                        <p:column headerText="Perfil de seguridad">
+                            <p:outputLabel value="#{profiles.gbProfile}"/>
+                        </p:column>
+                        <p:column headerText="Descripcion">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <p:outputLabel value="#{profiles.gbProfileDesc}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{profiles.gbProfileDesc}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Estado del perfil">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <p:outputLabel value="#{profiles.gbProfileStatus==1?'Activo':'Inactivo'}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:selectBooleanCheckbox id="GBProfileStatus" value="#{SecurityProfilesBean.isProfileActive}" itemLabel="#{SecurityProfilesBean.isProfileActive?'Perfil activo':'Perfil inactivo'}">
+                                         <p:ajax update="GBProfileStatus"/>
+                                    </p:selectBooleanCheckbox>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Usuario que modifico">
+                            <p:outputLabel value="#{profiles.gbLastUserXge}"/>
+                        </p:column>
+                        <p:column headerText="Fecha de modificacion">
+                            <p:outputLabel value="#{profiles.gbLastXgeDt}"/>
+                        </p:column>
+                        <p:column style="width:35px">
+                            <p:rowEditor />
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="Agregar perfil" styleClass="green-btn raised-btn" 
+                                             icon="fa fa-fw fa-plus" onclick="PF('AddSecProfileDlg').show();"/>
+                        </f:facet>
+                    </p:dataTable>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

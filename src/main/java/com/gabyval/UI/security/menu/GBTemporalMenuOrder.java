@@ -94,7 +94,7 @@ public class GBTemporalMenuOrder {
         DefaultMenuItem item = new DefaultMenuItem(gbMenulinks.getGbMenuName());
         item.setId(""+gbMenulinks.getGbMenuId());
         item.setIcon(gbMenulinks.getGbIcon());
-        item.setCommand(gbMenulinks.getGbPageView());
+        item.setCommand(gbMenulinks.getGbPageView()+"?faces-redirect=true");
         return item;
     }
 }
