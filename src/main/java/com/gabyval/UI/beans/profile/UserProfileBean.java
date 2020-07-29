@@ -17,12 +17,15 @@ import java.io.ByteArrayInputStream;
 import java.util.Calendar;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.CroppedImage;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 /** 
@@ -55,7 +58,7 @@ import org.primefaces.model.StreamedContent;
  * |   1.0   |  14/05/2020  |      GAOQ      | Creacion y certificacion de la clase.                                                                   |  
  * |---------|--------------|----------------|---------------------------------------------------------------------------------------------------------|
  */
-@SessionScoped
+@RequestScoped
 @ManagedBean(name = "ProfileBean")
 public class UserProfileBean{
     private final Logger log = Logger.getLogger(UserProfileBean.class);//El log de esta clase
@@ -66,6 +69,7 @@ public class UserProfileBean{
     private List<SelectItem> gender;//Lista de posibles generos.
     private int idTypeId;//Id del tipo de identificacion seleccionado.
     private int genderId;//Id del tipo de genero seleccionado.
+    private CroppedImage new_photo_profile;
     
     /**
      * Crea una nueva instancia de este bean, obteniendo de la base de datos los
@@ -200,6 +204,14 @@ public class UserProfileBean{
     public void setGenderId(int genderId) {
         this.genderId = genderId;
     }
+
+    public CroppedImage getNew_photo_profile() {
+        return new_photo_profile;
+    }
+
+    public void setNew_photo_profile(CroppedImage new_photo_profile) {
+        this.new_photo_profile = new_photo_profile;
+    }
     
     /**
      * Captura el evento de carga de una foto.
@@ -236,7 +248,7 @@ public class UserProfileBean{
             log.debug("GabyvalSystem - Actualizando valor de revision.");
             profile_info.setRowversion(profile_info.getRowversion()+1);
             log.debug("GabyvalSystem - Guardando foto de perfil.");
-//            photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()), "image/png");
+            photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()), "image/png");
             log.debug("GabyvalSystem - Enviando el perfil a base de datos.");
             GBStaffController.getInstance().saveProfile(profile_info);
             log.debug("GabyvalSystem - Guardado exitoso.");
@@ -256,7 +268,7 @@ public class UserProfileBean{
         log.debug("GabyvalSystem - Seteando valor de genero.");
         genderId=profile_info.getGender().getCatalogId();
         log.debug("GabyvalSystem - Re formando foto de perfil.");
-        photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()));
+        photo_profile=new DefaultStreamedContent(new ByteArrayInputStream(profile_info.getGbPhoto()), "image");
         log.debug("Perfil de usuario cargado.");
     }
 

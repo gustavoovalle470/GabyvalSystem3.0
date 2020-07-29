@@ -15,34 +15,38 @@ import javax.servlet.http.HttpSession;
 import com.gabyval.UI.utils.ADNavigationActions;
 import com.gabyval.UI.utils.UIMessageManagement;
 import com.gabyval.controllers.security.UserSessionManager;
+import com.gabyval.controllers.user.GBStaffController;
 import com.gabyval.persistence.exception.GBPersistenceException;
 import com.gabyval.referencesbo.security.users.GbUsers;
+import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.RequestScoped;
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.menu.DefaultMenuModel;
 
 /**
  *
  * @author OvalleGA
  */
-@SessionScoped
+@RequestScoped
 @ManagedBean(name = "UserSessionBean")
 public class UserSessionBean implements Serializable{
     private final Logger log = Logger.getLogger(UserSessionBean.class);
-    private GbUsers user;
-    private final HttpSession session;
+    private final HttpSession session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+    private final GbUsers user= UserSessionManager.getInstance().getUser(session);
+    private StreamedContent photo_profile;//La foto del perfil de usuario.
     private DefaultMenuModel user_sec_menu;
     private String pwd;
     private String repwd;
 
     public UserSessionBean(){
-        log.debug("Obteniendo datos de sesion.");
-        session = (HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        log.debug("Obteniendo usuario conectado.");
-        user = UserSessionManager.getInstance().getUser(session);
         log.debug("Recuperando esquema de seguridad.");
         try {
+            System.out.println("CREANDO...");
+            photo_profile=new DefaultStreamedContent(new ByteArrayInputStream( GBStaffController.getInstance().get_profile_info(user.getGbUsername()).getGbPhoto()), "image");
             user_sec_menu = MenuFactory.getInstance().getSecMenuUser(user.getGbUsername());
         } catch (GBException | GBPersistenceException ex) {
             log.error(ex);
@@ -94,6 +98,11 @@ public class UserSessionBean implements Serializable{
     public void setRepwd(String repwd) {
         this.repwd = repwd;
     }
+
+    public StreamedContent getPhoto_profile() {
+        return photo_profile;
+    }
+
     
     public String logout(){
         try {

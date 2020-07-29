@@ -10,18 +10,12 @@
         <a href="#" id="layout-menu-btn" class="menu-btn">
             <i class="fa fa-bars"></i>
         </a>
-
-        <div class="topbar-search">
-            <input type="text" class="ui-widget" />
-            <i class="fa fa-search"></i>
-        </div>
         
         <div class="layout-topbar-menu-wrapper">            
             <ul class="topbar-menu">
                     <li class="profile-item">
                         <a href="#">
-                            <p:graphicImage name="images/gbIconSmall.png" library="manhattan-layout"/>
-                            <!-- Verificar el como cargar la imagen desde la base de datos. <p:graphicImage value="#{ProfileBean.photo_profile}" width="100" height="100" cache="false"/>-->
+                            <p:graphicImage id="ProfilePhoto" value="#{UserSessionBean.photo_profile}" stream="false" width="200" height="200" alt="Foto de perfil"/>
                             <span class="topbar-item-name profile-name">#{UserSessionBean.username}</span>
                         </a>
 
@@ -33,58 +27,15 @@
                                     <span class="topbar-badge">5</span>
                                 </p:commandLink>
                                 <p:commandLink>
-                                    <i class="fa fa-fw fa-user-secret"></i>
-                                    <span>Privacidad</span>
+                                    <i class="fa fa-fw fa-unlock-alt"></i>
+                                    <span>Cambio de contraseña</span>
                                     <span class="topbar-badge">2</span>
-                                </p:commandLink>
-                                <p:commandLink>
-                                    <i class="fa fa-fw fa-cog"></i>
-                                    <span>Configuración</span>
                                 </p:commandLink>
                                 <p:commandLink onclick="PF('logoutdlg').show();">
                                     <i class="fa fa-fw fa-sign-out"></i>
                                     <span>Cerrar sesión</span>
                                 </p:commandLink>
                             </h:form>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="topbar-icon swing fa fa-fw fa-envelope-o"></i>
-                            <span class="topbar-badge rubberBand">5</span>
-                            <span class="topbar-item-name">Messages</span>
-                        </a>
-                        <ul class="animated">
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar1.png" library="manhattan-layout" width="35"/>
-                                    <span>Give me a call</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar2.png" library="manhattan-layout" width="35"/>
-                                    <span>Reports attached</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar3.png" library="manhattan-layout" width="35"/>
-                                    <span>About your invoice</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar2.png" library="manhattan-layout" width="35"/>
-                                    <span>Meeting today</span>
-                                </a>
-                            </li>
-                            <li role="menuitem">
-                                <a href="#" class="topbar-message">
-                                    <p:graphicImage name="images/avatar4.png" library="manhattan-layout" width="35"/>
-                                    <span>Out of office</span>
-                                </a>
-                            </li>
                         </ul>
                     </li>
                     <li>

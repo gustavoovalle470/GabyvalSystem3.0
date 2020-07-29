@@ -29,6 +29,7 @@
         </h:head>
 
         <h:body onload="validateSession()">
+                <p:autoUpdate/>
                 <p:growl id="PrincipalGrowlApp" showDetail="true">
                 <p:autoUpdate/>
                 </p:growl>
@@ -45,7 +46,7 @@
                         <div class="layout-main-mask"></div>
                     </div>
 
-                    <ui:include src="./rightpanel.xhtml" />      
+                    <ui:include src="./rightpanel.xhtml"/>      
                     <ui:include src="./sidebar.xhtml" />
                 </div>
 
